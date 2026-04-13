@@ -1,7 +1,7 @@
 const stations = {
   ExLondon: {
     system: "Example",
-    station: "London",
+    name: "London",
     goods: {
       "grain": 37,
       "fruit and veg": 99,
@@ -29,7 +29,7 @@ const stations = {
   },
   ExToronto: {
     system: "Example",
-    station: "Toronto",
+    name: "Toronto",
     goods: {
       "grain": 37,
       "fruit and veg": 149,
@@ -85,25 +85,42 @@ function calcPrices(currentStationID, targetStationID) {
 }
 
 function findHighestDiff(diffs) {
-  return diffs.sort((a, b) => b.priceDiff - a.priceDiff).slice(0, 4)
+  return [...diffs].sort((a, b) => b.priceDiff - a.priceDiff).slice(0, 4)
 }
 
 function findLowestDiff(diffs) {
-  return diffs.sort((a, b) => a.priceDiff - b.priceDiff).slice(0, 4)
+  return [...diffs].sort((a, b) => a.priceDiff - b.priceDiff).slice(0, 4)
+}
+
+function formatGoodsList(goodsArray, reverse = false) {
+  for (const goods of goodsArray) {
+    const value = reverse ? Math.abs(goods.priceDiff) : goods.priceDiff
+
+    console.log(`  ${goods.item.padEnd(18)} +${value.toString().padStart(4)}¢`)
+  }
 }
 
 function printRoute(currentStationID, targetStationID) {
+  const current = stations[currentStationID]
+  const target = stations[targetStationID]
+
   const diffs = calcPrices(currentStationID, targetStationID)
+
   const buyAtCurrent = findHighestDiff(diffs)
   const buyAtTarget = findLowestDiff(diffs)
+
+  console.log("\n======= COMPUTED TRADE ROUTE =========")
   console.log(
-    `Best goods to buy at ${currentStationID} and sell at ${targetStationID}:`,
+    `${current.name} (${current.system}) → ${target.name} (${target.system})\n`,
   )
-  console.log(buyAtCurrent)
-  console.log(
-    `Best goods to buy at ${targetStationID} and sell at ${currentStationID}:`,
-  )
-  console.log(buyAtTarget)
+
+  console.log(`BUY @ ${current.name} → SELL @ ${target.name}`)
+  formatGoodsList(buyAtCurrent)
+
+  console.log(`\nBUY @ ${target.name} → SELL @ ${current.name}`)
+  formatGoodsList(buyAtTarget, true)
+
+  console.log("\n=================================\n")
 }
 
 //test skryptu:
