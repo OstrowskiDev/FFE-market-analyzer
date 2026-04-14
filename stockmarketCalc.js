@@ -1,6 +1,82 @@
+import fs from "fs"
+import path from "path"
+import { Jimp } from "jimp"
+import Tesseract from "tesseract.js"
+
+// Reading .png and .jpg files in current dir:
+
+const files = fs.readdirSync(".")
+
+const images = files.filter(
+  (file) =>
+    (file.endsWith(".png") || file.endsWith(".jpg")) &&
+    !file.startsWith("debug"),
+)
+
+if (images.length === 0) {
+  console.log("No images found")
+  process.exit(0)
+}
+
+let newestFile = null
+let newestTime = 0
+
+for (const file of images) {
+  const stats = fs.statSync(file)
+
+  if (stats.mtimeMs > newestTime) {
+    newestTime = stats.mtimeMs
+    newestFile = file
+  }
+}
+
+console.log("Newest image:", newestFile)
+
+// Krok 2: wczytaj obraz
+const image = await Jimp.read(newestFile)
+
+// weryfikacja danych poprzez sprawdzenie szerokości i wysokości.
+console.log("Width:", image.bitmap.width)
+console.log("Height:", image.bitmap.height)
+
+// KROK EXTRA - poprawienie jakości dla OCR
+// image.scale(3)
+
+// KROK 3
+image.greyscale()
+await image.write("debug_grayscale.png")
+console.log("After grayscale")
+console.log("Saved: debug_grayscale.png")
+
+// KROK 4: threshold
+image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
+  const brightness = image.bitmap.data[idx]
+  // po grayscale R = G = B, więc bierzemy R
+  const threshold = 200
+
+  const value = brightness > threshold ? 255 : 0
+
+  image.bitmap.data[idx] = value // R
+  image.bitmap.data[idx + 1] = value // G
+  image.bitmap.data[idx + 2] = value // B
+})
+
+// image.threshold({ max: 60, replace: 255, autoGreyscale: true })
+
+await image.write("debug_threshold.png")
+console.log("After debug_threshold")
+
+// KROK 5: OCR
+const {
+  data: { text },
+} = await Tesseract.recognize("debug_threshold.png")
+console.log("OCR result:\n", text)
+
+// stations data:
+
 const stations = {
-  ExLondon: {
-    system: "Example",
+  SolLondon: {
+    system: "Sol",
     name: "London",
     goods: {
       "grain": 37,
@@ -27,8 +103,8 @@ const stations = {
       "narcotics": "illegal",
     },
   },
-  ExToronto: {
-    system: "Example",
+  SolToronto: {
+    system: "Sol",
     name: "Toronto",
     goods: {
       "grain": 37,
@@ -125,4 +201,4 @@ function printRoute(currentStationID, targetStationID) {
 
 //test skryptu:
 
-printRoute("ExLondon", "ExToronto")
+printRoute("SolLondon", "SolToronto")
