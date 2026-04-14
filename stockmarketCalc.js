@@ -51,26 +51,133 @@ console.log("Saved: debug_grayscale.png")
 // KROK 4: threshold
 image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
   const brightness = image.bitmap.data[idx]
-  // po grayscale R = G = B, więc bierzemy R
   const threshold = 200
-
   const value = brightness > threshold ? 255 : 0
-
-  image.bitmap.data[idx] = value // R
-  image.bitmap.data[idx + 1] = value // G
-  image.bitmap.data[idx + 2] = value // B
+  image.bitmap.data[idx] = value
+  image.bitmap.data[idx + 1] = value
+  image.bitmap.data[idx + 2] = value
 })
 
-// image.threshold({ max: 60, replace: 255, autoGreyscale: true })
+// KROK 4b: auto-detect bounding box białych pikseli
+const { width, height, data } = image.bitmap
+let minX = width,
+  maxX = 0,
+  minY = height,
+  maxY = 0
 
-await image.write("debug_threshold.png")
-console.log("After debug_threshold")
+for (let y = 0; y < height; y++) {
+  for (let x = 0; x < width; x++) {
+    const idx = (y * width + x) * 4
+    if (data[idx] === 255) {
+      if (x < minX) minX = x
+      if (x > maxX) maxX = x
+      if (y < minY) minY = y
+      if (y > maxY) maxY = y
+    }
+  }
+}
 
-// KROK 5: OCR
+const padding = 10
+minX = Math.max(0, minX - padding)
+maxX = Math.min(width - 1, maxX + padding)
+minY = Math.max(0, minY - padding)
+maxY = Math.min(height - 1, maxY + padding)
+
+console.log(`Bounding box: x=${minX}-${maxX}, y=${minY}-${maxY}`)
+
+// KROK 4c: znajdź granicę między kolumnami (pionowy pas z min. białych pikseli)
+// szukamy w środkowej 60% szerokości żeby nie złapać krawędzi
+const searchLeft = minX + Math.floor((maxX - minX) * 0.2)
+const searchRight = minX + Math.floor((maxX - minX) * 0.8)
+
+let splitX = searchLeft
+let minWhiteInColumn = Infinity
+
+for (let x = searchLeft; x <= searchRight; x++) {
+  let whiteCount = 0
+  for (let y = minY; y <= maxY; y++) {
+    const idx = (y * width + x) * 4
+    if (data[idx] === 255) whiteCount++
+  }
+  if (whiteCount < minWhiteInColumn) {
+    minWhiteInColumn = whiteCount
+    splitX = x
+  }
+}
+
+// przesuń split 10% szerokości contentu w prawo
+splitX = Math.min(maxX, splitX + Math.floor((maxX - minX) * 0.21))
+
+console.log(
+  `Split column at x=${splitX} (${Math.round(((splitX - minX) / (maxX - minX)) * 100)}% of content width)`,
+)
+
+// debug: zapisz threshold z zaznaczoną linią podziału
+const debugImg = image.clone()
+for (let y = 0; y < height; y++) {
+  const idx = (y * width + splitX) * 4
+  debugImg.bitmap.data[idx] = 128
+  debugImg.bitmap.data[idx + 1] = 128
+  debugImg.bitmap.data[idx + 2] = 128
+}
+await debugImg.write("debug_threshold.png")
+console.log("Saved: debug_threshold.png")
+
+// KROK 5: OCR - dwa przejścia
+const { createWorker } = Tesseract
+
+// przejście 1: lewa kolumna → nazwy towarów
+const workerNames = await createWorker("eng", 1)
 const {
-  data: { text },
-} = await Tesseract.recognize("debug_threshold.png")
-console.log("OCR result:\n", text)
+  data: { text: namesText },
+} = await workerNames.recognize("debug_threshold.png", {
+  rectangle: {
+    left: minX,
+    top: minY,
+    width: splitX - minX,
+    height: maxY - minY,
+  },
+})
+await workerNames.terminate()
+
+// przejście 2: prawa kolumna → ceny
+const workerPrices = await createWorker("eng", 2, {
+  legacyCore: true,
+  legacyLang: true,
+})
+await workerPrices.setParameters({ tessedit_char_whitelist: "0123456789." })
+const {
+  data: { text: pricesText },
+} = await workerPrices.recognize("debug_threshold.png", {
+  rectangle: {
+    left: splitX,
+    top: minY,
+    width: maxX - splitX,
+    height: maxY - minY,
+  },
+})
+await workerPrices.terminate()
+
+// połącz wyniki
+const names = namesText
+  .trim()
+  .split("\n")
+  .map((l) => l.trim())
+  .filter(Boolean)
+const prices = pricesText
+  .trim()
+  .split("\n")
+  .map((l) => l.trim())
+  .filter(Boolean)
+
+console.log("\nOCR names:\n", names)
+console.log("\nOCR prices:\n", prices)
+
+const result = names.map((name, i) => ({ name, price: prices[i] ?? "?" }))
+console.log("\nFinal result:")
+for (const row of result) {
+  console.log(`  ${row.name.padEnd(20)} ${row.price}`)
+}
 
 // stations data:
 
@@ -201,4 +308,4 @@ function printRoute(currentStationID, targetStationID) {
 
 //test skryptu:
 
-printRoute("SolLondon", "SolToronto")
+// printRoute("SolLondon", "SolToronto")
