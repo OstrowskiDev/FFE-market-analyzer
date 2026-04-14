@@ -1,0 +1,254 @@
+//Test 01
+Tesseract default:
+
+OCR result:
+ Kater fo.
+Liquid Oxygen 9.0
+Grain I= NR
+Fruit and Keg. 99.1
+Hnimal Meat 105.5
+Synthetic Meat 019.5
+Liquor g319.4
+Medicines guide
+Fertilizer fin.
+Animal Skins e149
+Lusury Goods 1304.8
+Heawy Plastics 39.1
+Metal Hlloys feh.h
+
+
+// Test 02
+Tesseract.recognize("debug_threshold.png", "eng", {
+  tessedit_ocr_engine_mode: "0",
+}
+
+OCR result:
+ Kater fo.
+Liquid Oxygen 9.0
+Grain I= NR
+Fruit and Keg. 99.1
+Hnimal Meat 105.5
+Synthetic Meat 019.5
+Liquor g319.4
+Medicines guide
+Fertilizer fin.
+Animal Skins e149
+Lusury Goods 1304.8
+Heawy Plastics 39.1
+Metal Hlloys feh.h
+
+//Test 3
+const worker = await createWorker("eng", 0, {
+  legacyCore: true,
+  legacyLang: true,
+})
+
+
+OCR result:
+ Hater [£I].'I
+Liquid nggen [£5_I]
+Grain [£5'I.Li
+Fruit and Peg. [£55_'I
+Flnimal Heat [£1555
+5gnthetirt'1eat [£155
+Liqunr [£5155
+Hedirine5 [£515E
+Fertilizer [£1L|.'I
+FInimaI EI-cin5 [£5155
+Luxurg Eunds [£15I]L|.EI
+Hear-lg P|E|5£i[5 I£55_'I
+Hetal Fillings [£E5.5
+
+
+//Test 4
+const worker = await createWorker("eng", 2, {
+  legacyCore: true,
+  legacyLang: true,
+})
+
+OCR result:
+ Kater o1
+Liguid O=ygen 9.0
+Lrain 1= WA
+Fruit and Keg. a9.1
+Hnimal Meat f105.5
+Synthetic Meat 0195
+Liquor g319.4
+Meditines fuid.e
+Fertilizer fiu.1
+Animal Skins fe149
+Lusury Goods 413048
+Heawy Plastics 39.1
+Metal Hlloys feh.h
+
+//Test 5
+const worker = await createWorker("eng", 1, {
+  legacyCore: true,
+  legacyLang: true,
+})
+
+OCR result:
+ Kater fo.
+Liquid Oxygen 9.0
+Grain I= NR
+Fruit and Keg. 99.1
+Hnimal Meat 105.5
+Synthetic Meat 019.5
+Liquor g319.4
+Medicines guide
+Fertilizer fin.
+Animal Skins e149
+Lusury Goods 1304.8
+Heawy Plastics 39.1
+Metal Hlloys feh.h
+
+//Test 6
+const worker = await createWorker("eng", 1, {
+  legacyCore: true,
+  legacyLang: true,
+})
+await worker.setParameters({
+  tessedit_char_whitelist: "0123456789",
+})
+
+OCR result:
+ 1
+0 90
+1
+991
+1055
+0195
+3194
+11
+149
+413048
+391
+02
+
+
+// Test 7
+Norm Cap na obrazie bez znaku Credits (retusz)
+
+aber
+Liquid Oxygen
+Lrain
+Fruit and -eg.
+Hnimal Meat
+oynthetic Meal
+Liquor
+Medicines
+Fertilizer
+Hnimal Skins
+Luzury Goods
+Heary Plastics
+
+Metal Alloys
+
+Lo co
+— |
+
+441
+1045.5
+14.5
+414.4 // nie wiem nawet przy czym to miało stać
+41d // zamiast 473.2
+14.1 //prawie ok 14.7
+b144  // zamiast 613.9
+1404.8 // zamiast 1304.8
+441  // zamiast 39.7
+24.4
+
+// Test 8
+Usunięcie znaku Credits manualnie przed Tesseract
+const worker = await createWorker("eng", 2, {
+  legacyCore: true,
+  legacyLang: true,
+})
+
+OCR result:
+ Mater 0.1
+Liguid O=ygen 9.0
+Grain 114
+Fruit and Keg. 99.1
+Hnimal Meat 105.5
+Synthetic Meat 19.5
+Liquor 3194
+Medirines L4
+Fertilizer 141
+HAnimal Skins k1414
+Lusury Goods 1304 8
+Heawy Plastics 191
+Metal Hlloys £h.h
+
+
+// Test 9
+Usunięcie znaku Credits manualnie przed Tesseract
+const worker = await createWorker("eng", 1, {
+  legacyCore: true,
+  legacyLang: true,
+})
+
+OCR result:
+ Mater 0.1
+Liquid Oxygen 9.0
+Grain 11.4
+Fruit and Keg. 99.1
+Hnimal Meat 105.5
+Synthetic Meat 19.5
+Liquor 3194
+Medirines Ld
+Fertilizer 14.1
+Animal Skins h1414
+Lusury Goods 1304.8
+Heawy Plastics 19.1
+Metal Hlloys £h.h
+
+// Test 10
+// Podział na dwie kolumny do osobnych analiz
+
+Final result:
+  Mater                0.1
+  Liquid Oxygen        9.0
+  Grain                31. 1
+  Fruit and Meg.       09.1
+  Hnimal Meat          105.5
+  Synthetic Mea        019.5
+  Liquor               319.4
+  Medirines            1.
+  Fertilizer           1 1.1
+  Animal Skins         013.9
+  Lusury Goods         1304.8
+  Heawry Plastics      049.1
+  Metal Hlloys         02.5
+
+// Test 11
+// Online OCR.space
+
+
+****** Result for Image/Page 1 ******
+Hater
+Liquid Oxygen
+Grain
+Fruit and beg.
+Animal Meat
+Synthetic Meat
+Liquor
+Medicines
+Fertilizer
+Animal Skins
+Luzury Goods
+Heavy Plastics
+Metal Alloys
+0.7
+9.0
+31.4
+99.7
+105.5
+19.5
+379.3
+473.2
+14.7
+613.9
+1304.8
+39.7
+25.5
