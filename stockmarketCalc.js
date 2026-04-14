@@ -1,7 +1,8 @@
 import fs from "fs"
 import path from "path"
 import { Jimp } from "jimp"
-import Tesseract from "tesseract.js"
+import Tesseract from "tesseract.js" // uninstall if OCR SPACE API gets better results
+import { ocrSpace } from "ocr-space-api-wrapper"
 
 // Reading .png and .jpg files in current dir:
 
@@ -48,7 +49,7 @@ await image.write("debug_grayscale.png")
 console.log("After grayscale")
 console.log("Saved: debug_grayscale.png")
 
-// KROK 4: threshold
+// KROK 4: threshold - usunięcie szumu informacyjnego
 image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
   const brightness = image.bitmap.data[idx]
   const threshold = 200
@@ -58,7 +59,7 @@ image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
   image.bitmap.data[idx + 2] = value
 })
 
-// KROK 4b: auto-detect bounding box białych pikseli
+// KROK 4b: znajdź zasięg białych pikseli (bounding box contentu)
 const { width, height, data } = image.bitmap
 let minX = width,
   maxX = 0,
@@ -84,99 +85,64 @@ minY = Math.max(0, minY - padding)
 maxY = Math.min(height - 1, maxY + padding)
 
 console.log(`Bounding box: x=${minX}-${maxX}, y=${minY}-${maxY}`)
+console.log(`Content size: ${maxX - minX} x ${maxY - minY} px`)
 
-// KROK 4c: znajdź granicę między kolumnami (pionowy pas z min. białych pikseli)
-// szukamy w środkowej 60% szerokości żeby nie złapać krawędzi
-const searchLeft = minX + Math.floor((maxX - minX) * 0.2)
-const searchRight = minX + Math.floor((maxX - minX) * 0.8)
+// KROK 4c: crop do bounding box
+image.crop({ x: minX, y: minY, w: maxX - minX, h: maxY - minY })
 
-let splitX = searchLeft
-let minWhiteInColumn = Infinity
+// DEBUG: dwie pionowe kreski na 0.65 i 0.71 szerokości cropped obrazu
+// const cropW = image.bitmap.width
+// const cropH = image.bitmap.height
+// const line1X = Math.floor(cropW * 0.69)
+// const line2X = Math.floor(cropW * 0.75)
+// for (let y = 0; y < cropH; y++) {
+//   for (const lineX of [line1X, line2X]) {
+//     const idx = (y * cropW + lineX) * 4
+//     image.bitmap.data[idx] = 128
+//     image.bitmap.data[idx + 1] = 128
+//     image.bitmap.data[idx + 2] = 128
+//   }
+// }
+// console.log(`Debug lines at x=${line1X} (65%) and x=${line2X} (71%)`)
 
-for (let x = searchLeft; x <= searchRight; x++) {
-  let whiteCount = 0
-  for (let y = minY; y <= maxY; y++) {
-    const idx = (y * width + x) * 4
-    if (data[idx] === 255) whiteCount++
-  }
-  if (whiteCount < minWhiteInColumn) {
-    minWhiteInColumn = whiteCount
-    splitX = x
+// wyzeruj znak Credits
+const cropW = image.bitmap.width
+const cropH = image.bitmap.height
+const CREDITS_START = 0.69
+const CREDITS_END = 0.75
+const creditsX1 = Math.floor(cropW * CREDITS_START)
+const creditsX2 = Math.floor(cropW * CREDITS_END)
+for (let y = 0; y < cropH; y++) {
+  for (let x = creditsX1; x <= creditsX2; x++) {
+    const idx = (y * cropW + x) * 4
+    image.bitmap.data[idx] = 0
+    image.bitmap.data[idx + 1] = 0
+    image.bitmap.data[idx + 2] = 0
   }
 }
-
-// przesuń split 10% szerokości contentu w prawo
-splitX = Math.min(maxX, splitX + Math.floor((maxX - minX) * 0.21))
-
 console.log(
-  `Split column at x=${splitX} (${Math.round(((splitX - minX) / (maxX - minX)) * 100)}% of content width)`,
+  `Blacked out Credits sign: ${CREDITS_START}-${CREDITS_END} (x=${creditsX1}-${creditsX2})`,
 )
 
-// debug: zapisz threshold z zaznaczoną linią podziału
-const debugImg = image.clone()
-for (let y = 0; y < height; y++) {
-  const idx = (y * width + splitX) * 4
-  debugImg.bitmap.data[idx] = 128
-  debugImg.bitmap.data[idx + 1] = 128
-  debugImg.bitmap.data[idx + 2] = 128
-}
-await debugImg.write("debug_threshold.png")
+await image.write("debug_threshold.png")
 console.log("Saved: debug_threshold.png")
 
-// KROK 5: OCR - dwa przejścia
-const { createWorker } = Tesseract
+// KROK 5: OCR SPACER API WRAPPER:
 
-// przejście 1: lewa kolumna → nazwy towarów
-const workerNames = await createWorker("eng", 1)
-const {
-  data: { text: namesText },
-} = await workerNames.recognize("debug_threshold.png", {
-  rectangle: {
-    left: minX,
-    top: minY,
-    width: splitX - minX,
-    height: maxY - minY,
-  },
-})
-await workerNames.terminate()
+try {
+  // Using the OCR.space default free API key (max 10reqs in 10mins) + remote file
+  const result = await ocrSpace("debug_threshold.png", {
+    apiKey: "helloworld",
+    OCREngine: "2",
+    isTable: true, // wymusza zwrot tekstu linia po linii - ważne dla tabelki
+  })
 
-// przejście 2: prawa kolumna → ceny
-const workerPrices = await createWorker("eng", 2, {
-  legacyCore: true,
-  legacyLang: true,
-})
-await workerPrices.setParameters({ tessedit_char_whitelist: "0123456789." })
-const {
-  data: { text: pricesText },
-} = await workerPrices.recognize("debug_threshold.png", {
-  rectangle: {
-    left: splitX,
-    top: minY,
-    width: maxX - splitX,
-    height: maxY - minY,
-  },
-})
-await workerPrices.terminate()
-
-// połącz wyniki
-const names = namesText
-  .trim()
-  .split("\n")
-  .map((l) => l.trim())
-  .filter(Boolean)
-const prices = pricesText
-  .trim()
-  .split("\n")
-  .map((l) => l.trim())
-  .filter(Boolean)
-
-console.log("\nOCR names:\n", names)
-console.log("\nOCR prices:\n", prices)
-
-const result = names.map((name, i) => ({ name, price: prices[i] ?? "?" }))
-console.log("\nFinal result:")
-for (const row of result) {
-  console.log(`  ${row.name.padEnd(20)} ${row.price}`)
+  // Using your personal API key + local file
+  // const res2 = await ocrSpace('/path/to/file.pdf', { apiKey: '<API_KEY_HERE>' });
+  console.log(result)
+  //console.log(result.ParsedResults[0].ParsedText)
+} catch (error) {
+  console.error(error)
 }
 
 // stations data:
