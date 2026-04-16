@@ -1,5 +1,6 @@
 import { rl } from "./rl.js"
 import { printRoute } from "../pipeline/printData.js"
+import { scanStation } from "../pipeline/pipeline.js"
 import { typeText, clearScreen, renderHeader, progressBar } from "./ui.js"
 import { ask } from "./helpers.js"
 
@@ -22,7 +23,12 @@ export async function printOptions() {
 
   switch (choice) {
     case "1":
-      console.log("\nOCR pipeline not implemented yet")
+      console.log("\nTaking three images of station data to analyze..")
+      const system = await ask("Enter stations star system name:")
+      const name = await ask("Enter station name:")
+      console.log("\nAnalyzing data... please wait...")
+      await scanStation(system, name)
+      console.log("Scan complete, data added successfully.")
       await ask("Press enter to continue: ")
       break
 
