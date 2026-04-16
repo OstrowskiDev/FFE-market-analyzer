@@ -1,3 +1,5 @@
+import { dictionary } from "../data/dictionary.js"
+
 export function parseOcr(ocrOutput) {
   const raw = ocrOutput
 
@@ -11,7 +13,8 @@ export function parseOcr(ocrOutput) {
       return [name, parseFloat(price)]
     })
 
-  console.log(result)
+  console.log("parseOCR result:", result)
+  return result
 }
 
 // this function takes as first arg parsed ORC data array [[name, price], ... ]
