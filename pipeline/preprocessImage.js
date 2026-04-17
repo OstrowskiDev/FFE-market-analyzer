@@ -3,15 +3,29 @@ import { Jimp } from "jimp"
 export async function preprocessImage(file) {
   const image = await Jimp.read(file)
 
-  // FAZA 2 weryfikacja danych poprzez sprawdzenie szerokości i wysokości.
-  console.log("Width:", image.bitmap.width)
-  console.log("Height:", image.bitmap.height)
+  // FAZA 2 - poprawienie rozdzielczości dla lepszego rezultatu OCR readera
+  image.scale(3)
 
   // FAZA 3 grayscale
   image.greyscale()
   await image.write("debug_grayscale.png")
   console.log("After grayscale")
   console.log("Saved: debug_grayscale.png")
+
+  // FAZA 3.5 - pre-crop, tylko jeśli screenshoty są pobierane z F12+p dosbox-x:
+  {
+    const minX = Math.floor(image.bitmap.width * 0.46)
+    const maxX = Math.floor(image.bitmap.width * 0.77)
+    const minY = Math.floor(image.bitmap.height * 0.055)
+    const maxY = Math.floor(image.bitmap.height * 0.73)
+
+    image.crop({
+      x: minX,
+      y: minY,
+      w: maxX - minX,
+      h: maxY - minY,
+    })
+  }
 
   // FAZA 4: threshold - usunięcie szumu informacyjnego
   image.scan(
@@ -60,26 +74,11 @@ export async function preprocessImage(file) {
   // FAZA 4c: crop do bounding box
   image.crop({ x: minX, y: minY, w: maxX - minX, h: maxY - minY })
 
-  // DEBUG: dwie pionowe kreski na 0.69 i 0.75 szerokości cropped obrazu
-  // const cropW = image.bitmap.width
-  // const cropH = image.bitmap.height
-  // const line1X = Math.floor(cropW * 0.69)
-  // const line2X = Math.floor(cropW * 0.75)
-  // for (let y = 0; y < cropH; y++) {
-  //   for (const lineX of [line1X, line2X]) {
-  //     const idx = (y * cropW + lineX) * 4
-  //     image.bitmap.data[idx] = 128
-  //     image.bitmap.data[idx + 1] = 128
-  //     image.bitmap.data[idx + 2] = 128
-  //   }
-  // }
-  // console.log(`Debug lines at x=${line1X} (65%) and x=${line2X} (71%)`)
-
-  // wyzeruj znak Credits
+  // skasowanie znaku Credits
   const cropW = image.bitmap.width
   const cropH = image.bitmap.height
   const CREDITS_START = 0.69
-  const CREDITS_END = 0.75
+  const CREDITS_END = 0.74
   const creditsX1 = Math.floor(cropW * CREDITS_START)
   const creditsX2 = Math.floor(cropW * CREDITS_END)
   for (let y = 0; y < cropH; y++) {
