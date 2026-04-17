@@ -1,5 +1,4 @@
-import { stations } from "../data/stations.js"
-
+import fs from "fs"
 import {
   calcPrices,
   findHighestDiff,
@@ -8,6 +7,9 @@ import {
 } from "./analyzeData.js"
 
 export function printRoute(currentStationID, targetStationID) {
+  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const stations = JSON.parse(rawStations)
+
   const current = stations[currentStationID]
   const target = stations[targetStationID]
 

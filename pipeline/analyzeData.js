@@ -1,6 +1,9 @@
-import { stations } from "../data/stations.js"
+import fs from "fs"
+import { blacklist } from "../data/dictionary.js"
 
 function getStationStock(stationID) {
+  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const stations = JSON.parse(rawStations)
   const station = stations[stationID]
   if (!station) throw new Error(`Unknown station: ${stationID}`)
   return station.goods
@@ -38,7 +41,14 @@ export function findLowestDiff(diffs) {
 export function formatGoodsList(goodsArray, reverse = false) {
   for (const goods of goodsArray) {
     const value = reverse ? Math.abs(goods.priceDiff) : goods.priceDiff
+    const formatted = value.toFixed(1)
 
-    console.log(`  ${goods.item.padEnd(18)} +${value.toString().padStart(4)}¢`)
+    console.log(
+      `  ${goods.item.padEnd(18)} +${formatted.toString().padStart(4)}¢`,
+    )
   }
+}
+
+export function filterGoods(rawGoods) {
+  return rawGoods.filter(([name]) => !blacklist.includes(name))
 }
