@@ -2,6 +2,7 @@ import fs from "fs"
 import path from "path"
 
 export function getImages() {
+  const imagesNum = 3
   const files = fs.readdirSync(".")
 
   const images = files.filter(
@@ -10,23 +11,12 @@ export function getImages() {
       !file.startsWith("debug"),
   )
 
-  if (images.length === 0) {
-    console.log("No images found")
+  if (images.length < imagesNum) {
+    console.log(`Less than ${imagesNum} images found`)
     process.exit(0)
   }
 
-  let newestFile = null
-  let newestTime = 0
-
-  for (const file of images) {
-    const stats = fs.statSync(file)
-
-    if (stats.mtimeMs > newestTime) {
-      newestTime = stats.mtimeMs
-      newestFile = file
-    }
-  }
-
-  console.log("Newest image:", newestFile)
-  return newestFile
+  images.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)
+  const latest = images.slice(0, imagesNum).reverse()
+  return latest
 }
