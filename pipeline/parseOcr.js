@@ -10,15 +10,15 @@ export function parseOcr(ocrOutput) {
     .filter(Boolean)
     .map((line) => {
       const [name, price] = line.split("\t")
-      return [name, parseFloat(price)]
+      return [name, price]
     })
 
   console.log("parseOCR result:", result)
   return result
 }
 
-// this function takes as first arg parsed ORC data array [[name, price], ... ]
-export function normalizeGoods(parsedData) {
+// arg [[name, price], ... ]
+export function fuzzyMatchGoods(parsedData) {
   let normalizedData = []
   for (const item of parsedData) {
     let highestPts = 0
@@ -40,7 +40,7 @@ export function normalizeGoods(parsedData) {
     normalizedData.push(bestMatch)
     if (highestPts < item[0].length * 0.5) {
       console.warn(
-        `normalizeGoods func poor match detected, ORC output goods name: ${item[0]}`,
+        `fuzzyMatchGoods func poor match detected, ORC output goods name: ${item[0]}`,
       )
     }
   }

@@ -49,6 +49,6 @@ export function formatGoodsList(goodsArray, reverse = false) {
   }
 }
 
-export function filterGoods(rawGoods) {
-  return rawGoods.filter(([name]) => !blacklist.includes(name))
+export function filterGoods(goods) {
+  return goods.filter(([name]) => !blacklist.includes(name))
 }

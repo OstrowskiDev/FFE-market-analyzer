@@ -7,9 +7,9 @@ export async function getStations() {
   return data
 }
 
-export function createStation(stationArr, inputSystem, inputStName) {
+export function createStation(goodsArr, inputSystem, inputStName) {
   const station = {}
-  const goods = Object.fromEntries(stationArr)
+  const goods = Object.fromEntries(goodsArr)
   station.goods = goods
   const system = getSystemName(inputSystem)
   const stationName = getStationName(inputStName)
