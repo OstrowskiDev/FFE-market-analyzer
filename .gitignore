@@ -33,3 +33,6 @@ out/
 debug_*
 temp_*
 Screenshot*
+
+# game/dosbox-x screenshots
+32rtm_*
