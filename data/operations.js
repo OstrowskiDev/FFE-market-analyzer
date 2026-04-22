@@ -41,7 +41,7 @@ export async function saveStation(station) {
 
 function createBlackMarket(goods) {
   let blackMarket = {}
-  for (const key of illegalGoods) {
+  for (const key of illegalGoods.keys()) {
     if (!goods[key]) {
       blackMarket[key] = "default"
     }
