@@ -1,4 +1,5 @@
 import fs from "fs/promises"
+import { illegalGoods } from "./illegalGoods.js"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
 
 export async function getStations() {
@@ -36,4 +37,28 @@ export async function saveStation(station) {
     console.log("Error while saving station.JSON data:", err)
     throw err
   }
+}
+
+function createBlackMarket(goods) {
+  let blackMarket = {}
+  for (const key of illegalGoods) {
+    if (!goods[key]) {
+      blackMarket[key] = "default"
+    }
+  }
+  return blackMarket
+}
+
+export function addBlackMarket(station) {
+  if (station.blackMarket) {
+    console.log(`Error: Station ${station.name} already has black market`)
+    return
+  }
+  const blackMarket = createBlackMarket(station.goods)
+  station.blackMarket = blackMarket
+}
+
+export function updateBlackMarket(station) {
+  const blackMarket = createBlackMarket(station.goods)
+  station.blackMarket = blackMarket
 }
