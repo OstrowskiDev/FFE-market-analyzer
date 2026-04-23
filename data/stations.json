@@ -1,6 +1,6 @@
 {
   "GateOldBlackelk": {
-    "blackMarket": ["Merchant Baker's", "Biggs and Son Inc."],
+    "fence": ["Merchant Baker's", "Biggs and Son Inc."],
     "illegalGoods": {
       "Narcotics": 1289.1,
       "Live Animals": 1854.8,
@@ -68,7 +68,7 @@
     "id": "GatOldCurie"
   },
   "AliGhandi": {
-    "blackMarket": ["O'Hanlon's Exchange"],
+    "fence": ["O'Hanlon's Exchange"],
     "goods": {
       "Gem Stones": 3029.2,
       "Military Fuel": 50.9,
@@ -266,7 +266,7 @@
     "id": "SohBerlin"
   },
   "GatDublinCitadel": {
-    "blackMarket": ["Donalds's Merchandise"],
+    "fence": ["Donalds's Merchandise"],
     "goods": {
       "Military Fuel": 50.9,
       "Hand Weapons": 541,
@@ -366,7 +366,7 @@
   },
   "EtaAngusManwaring": {
     "warnings": ["no military fuel!"],
-    "blackMarket": ["Honest John Swallow's <-Confirmed"],
+    "fence": ["Honest John Swallow's <-Confirmed"],
     "offers": ["medicines", "computers"],
     "goods": {
       "Military Fuel": 58.2,
@@ -511,5 +511,32 @@
     "system": "Bernard Star",
     "name": "Boston Base",
     "id": "BerBostonBase"
+  },
+  "TesNewpipeline": {
+    "goods": {
+      "Gem Stones": 3015.8,
+      "Military Fuel": 49.7,
+      "Industrial Parts": 102.1,
+      "Computers": 349.9,
+      "Air Processors": 193.2,
+      "Farm Machinery": 64,
+      "Robots": 569.1,
+      "Alien Artefacts": 2342.5,
+      "Chaff": 95.3,
+      "Grain": 47.6,
+      "Fruit and Veg.": 124.7,
+      "Animal Meat": 112.7,
+      "Synthetic Meat": 16.9,
+      "Liquor": 419.5,
+      "Medicines": 523.9,
+      "Fertilizer": 12.1,
+      "Luxury Goods": 1503.2,
+      "Heavy Plastics": 30,
+      "Metal Alloys": 20.4,
+      "Precious Metals": 1131.3
+    },
+    "system": "Test",
+    "name": "Newpipeline",
+    "id": "TesNewpipeline"
   }
 }
