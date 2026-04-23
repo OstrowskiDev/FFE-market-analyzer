@@ -1,5 +1,6 @@
 import fs from "fs"
 import { blacklist } from "../data/dictionary.js"
+import { illegalGoods } from "../data/illegalGoods.js"
 
 function getStationStock(stationID) {
   const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
@@ -9,10 +10,18 @@ function getStationStock(stationID) {
   return station.goods
 }
 
-export function calcPrices(currentStationID, targetStationID) {
+// returns [{<goodsName>: number (price), priceDiff: number (profit)}, ...]
+export function calcPrices(currentStationID, targetStationID, options = {}) {
   const diffs = []
   const currentGoods = getStationStock(currentStationID)
   const targetGoods = getStationStock(targetStationID)
+
+  if (options.illegal) {
+    for (const [key, price] of Object.entries(illegalGoods)) {
+      if (!(key in currentGoods)) currentGoods[key] = price
+      if (!(key in targetGoods)) targetGoods[key] = price
+    }
+  }
 
   for (const item of Object.keys(currentGoods)) {
     const currentPrice = currentGoods[item]
