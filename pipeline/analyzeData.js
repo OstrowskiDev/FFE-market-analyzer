@@ -78,8 +78,8 @@ function findBestRoute(systemDiffs) {
   let bestRoute = null
 
   for (const route of systemDiffs) {
-    const highest = route.diffsHighest[0]
-    const lowest = route.diffsLowest[0]
+    const highest = route.diffsHighest
+    const lowest = route.diffsLowest
     const profit = highest.priceDiff + Math.abs(lowest.priceDiff)
 
     if (!bestRoute || profit > bestRoute.profit) {
