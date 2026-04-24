@@ -1,6 +1,7 @@
 import fs from "fs"
 import { blacklist } from "../data/dictionary.js"
 import { illegalGoods } from "../data/illegalGoods.js"
+import { printTradeRoute } from "../pipeline/printData.js"
 
 function getStationStock(stationID) {
   const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
@@ -8,6 +9,127 @@ function getStationStock(stationID) {
   const station = stations[stationID]
   if (!station) throw new Error(`Unknown station: ${stationID}`)
   return station.goods
+}
+
+function getStationsBySystem(name) {
+  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const stations = JSON.parse(rawStations)
+  const filtered = Object.values(stations).filter(
+    (station) => station.system === name,
+  )
+  if (!filtered.length) throw new Error(`Unknown system name: ${name}`)
+  return filtered
+}
+
+function getSystemDiffs(stationsA, stationsB) {
+  const systemDiffs = []
+  for (const stationA of stationsA) {
+    for (const stationB of stationsB) {
+      const diffs = calcPrices(stationA.id, stationB.id)
+      const highest = findHighestDiff(diffs)
+      const lowest = findLowestDiff(diffs)
+      const labeledDiffs = {
+        diffsHighest: highest,
+        diffsLowest: lowest,
+        stationNameA: stationA.name,
+        stationNameB: stationB.name,
+        systemA: stationA.system,
+        systemB: stationB.system,
+      }
+      systemDiffs.push(labeledDiffs)
+    }
+  }
+  return systemDiffs
+}
+/*
+RETURNS:
+SystemDiff[]
+
+SystemDiff:
+[
+  {
+    diffsHighest: DiffEntry[], //sorted desc (top N) A->B
+    diffsLowest:  DiffEntry[], //sorted asc (top N) B->A (negative num)
+    stationNameA: string,
+    stationNameB: string,
+    systemA: string,
+    systemB: string
+  }
+]
+
+DiffEntry:
+  { 
+    [goodsName]: number,  // dynamic key: price
+    priceDiff: number     // profit
+  }
+*/
+
+export function compareSystems(nameA, nameB, options) {
+  const stationsA = getStationsBySystem(nameA)
+  const stationsB = getStationsBySystem(nameB)
+
+  const systemDiffs = getSystemDiffs(stationsA, stationsB)
+  const bestRoute = findBestRoute(systemDiffs)
+  printTradeRoute(bestRoute, options)
+  //add CLI logger function
+}
+
+function findBestRoute(systemDiffs) {
+  let bestRoute = null
+
+  for (const route of systemDiffs) {
+    const highest = route.diffsHighest[0]
+    const lowest = route.diffsLowest[0]
+    const profit = highest.priceDiff + Math.abs(lowest.priceDiff)
+
+    if (!bestRoute || profit > bestRoute.profit) {
+      bestRoute = {
+        bestBuy: highest,
+        bestSell: lowest,
+        profit: profit,
+        stationNameA: route.stationNameA,
+        stationNameB: route.stationNameB,
+        systemA: route.systemA,
+        systemB: route.systemB,
+      }
+    }
+  }
+
+  return bestRoute
+}
+
+//!!!! zostawiam tą funkcję bo jest dobra i może się przydać później
+// ale obecnie wyszukiwana będzie para stacji, nie zestaw 2 routes w 2 niezależnych parach
+function findBestRoutes(systemDiffs) {
+  let bestHighest = null
+  let bestLowest = null
+
+  for (const route of systemDiffs) {
+    const highest = route.diffsHighest[0]
+    const lowest = route.diffsLowest[0]
+
+    if (!bestHighest || highest.priceDiff > bestHighest.priceDiff) {
+      bestHighest = {
+        ...highest,
+        stationNameA: route.stationNameA,
+        stationNameB: route.stationNameB,
+      }
+    }
+
+    if (!bestLowest || lowest.priceDiff < bestLowest.priceDiff) {
+      bestLowest = {
+        ...lowest,
+        stationNameA: route.stationNameA,
+        stationNameB: route.stationNameB,
+      }
+    }
+  }
+
+  return { bestHighest, bestLowest }
+}
+
+function compareStations(nameA, nameB) {
+  // podmień za istniejącą funkcję calcPrices
 }
 
 // returns [{<goodsName>: number (price), priceDiff: number (profit)}, ...]

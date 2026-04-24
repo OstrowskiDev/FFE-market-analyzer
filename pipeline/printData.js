@@ -52,3 +52,25 @@ function generateRouteMsg(
     `\n=======================================${isIllegal ? "=======" : ""}\n`,
   )
 }
+
+export function printTradeRoute(route, options = {}) {
+  const { isIllegal } = options
+  const { stationNameA, stationNameB, systemA, systemB, bestBuy, bestSell } =
+    route
+
+  console.log(
+    `\n======= COMPUTED ${isIllegal ? "ILLEGAL" : ""} TRADE ROUTE =========`,
+  )
+
+  console.log(`${stationNameA} (${systemA}) → ${stationNameB} (${systemB})\n`)
+
+  console.log(`BUY @ ${stationNameA} → SELL @ ${stationNameB}`)
+  formatGoodsList(bestBuy)
+
+  console.log(`\nBUY @ ${stationNameB} → SELL @ ${stationNameA}`)
+  formatGoodsList(bestSell, true)
+
+  console.log(
+    `\n=======================================${isIllegal ? "=======" : ""}\n`,
+  )
+}
