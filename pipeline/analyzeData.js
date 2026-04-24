@@ -2,6 +2,7 @@ import fs from "fs"
 import { blacklist } from "../data/dictionary.js"
 import { illegalGoods } from "../data/illegalGoods.js"
 import { printTradeRoute } from "../pipeline/printData.js"
+import { generateRouteMsg } from "./printData.js"
 
 function getStationStock(stationID) {
   const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
@@ -64,14 +65,14 @@ DiffEntry:
   }
 */
 
-export function compareSystems(nameA, nameB, options) {
+//!!!! decyzja: czy funkcja ma drukować legal/illegal czy both?
+export function compareSystems(nameA, nameB, options = {}) {
   const stationsA = getStationsBySystem(nameA)
   const stationsB = getStationsBySystem(nameB)
 
   const systemDiffs = getSystemDiffs(stationsA, stationsB)
   const bestRoute = findBestRoute(systemDiffs)
   printTradeRoute(bestRoute, options)
-  //add CLI logger function
 }
 
 function findBestRoute(systemDiffs) {
@@ -98,45 +99,24 @@ function findBestRoute(systemDiffs) {
   return bestRoute
 }
 
-//!!!! zostawiam tą funkcję bo jest dobra i może się przydać później
-// ale obecnie wyszukiwana będzie para stacji, nie zestaw 2 routes w 2 niezależnych parach
-function findBestRoutes(systemDiffs) {
-  let bestHighest = null
-  let bestLowest = null
+//!!!! decyzja: czy funkcja ma drukować legal/illegal czy both?
+export function compareStations(stationAId, stationBId) {
+  const diffs = calcPrices(stationAId, stationBId)
+  const illegalDiffs = calcPrices(stationAId, stationBId, {
+    illegal: true,
+  })
 
-  for (const route of systemDiffs) {
-    const highest = route.diffsHighest[0]
-    const lowest = route.diffsLowest[0]
-
-    if (!bestHighest || highest.priceDiff > bestHighest.priceDiff) {
-      bestHighest = {
-        ...highest,
-        stationNameA: route.stationNameA,
-        stationNameB: route.stationNameB,
-      }
-    }
-
-    if (!bestLowest || lowest.priceDiff < bestLowest.priceDiff) {
-      bestLowest = {
-        ...lowest,
-        stationNameA: route.stationNameA,
-        stationNameB: route.stationNameB,
-      }
-    }
-  }
-
-  return { bestHighest, bestLowest }
-}
-
-function compareStations(nameA, nameB) {
-  // podmień za istniejącą funkcję calcPrices
+  generateRouteMsg(diffs, stationAId, stationBId, { illegal: false })
+  generateRouteMsg(illegalDiffs, stationAId, stationBId, {
+    illegal: true,
+  })
 }
 
 // returns [{<goodsName>: number (price), priceDiff: number (profit)}, ...]
-export function calcPrices(currentStationID, targetStationID, options = {}) {
+export function calcPrices(stationAId, stationBId, options = {}) {
   const diffs = []
-  const currentGoods = getStationStock(currentStationID)
-  const targetGoods = getStationStock(targetStationID)
+  const currentGoods = getStationStock(stationAId)
+  const targetGoods = getStationStock(stationBId)
 
   if (options.illegal) {
     for (const [key, price] of Object.entries(illegalGoods)) {

@@ -1,5 +1,5 @@
 import { rl } from "./rl.js"
-import { printRoute } from "../pipeline/printData.js"
+import { compareStations } from "../pipeline/analyzeData.js"
 import { scanStation } from "../pipeline/pipeline.js"
 import { typeText, clearScreen, renderHeader, progressBar } from "./ui.js"
 import { ask } from "./helpers.js"
@@ -37,7 +37,7 @@ export async function printOptions() {
       renderHeader()
       const stationA = await ask("\nID of first station: ")
       const stationB = await ask("ID of second station: ")
-      printRoute(stationA, stationB)
+      compareStations(stationA, stationB)
       await ask("Press enter to continue: ")
       break
 
