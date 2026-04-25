@@ -4,6 +4,7 @@ import { runOcr } from "./runOcr.js"
 import { parseOcr, fuzzyMatchGoods } from "./parseOcr.js"
 import { createStation, saveStation } from "../data/operations.js"
 import { filterGoods } from "./analyzeData.js"
+import { blacklist } from "../data/dictionary.js"
 import { getFilesFromDosbox } from "./getFilesFromDosbox.js"
 import {
   correctPriceRanges,
@@ -23,7 +24,7 @@ export async function scanStation(system, name) {
     goods = correctCharMissMatch(goods)
     goods = correctPriceRanges(goods)
     goods = changePriceToNum(goods)
-    goods = filterGoods(goods) // remove low value goods eg water
+    goods = filterGoods(goods, blacklist) // remove low value goods eg water
     ocrDataArr.push(goods)
     console.log("Scan analyzed properly...")
   }

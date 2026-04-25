@@ -1,8 +1,8 @@
 import fs from "fs"
-import { blacklist } from "../data/dictionary.js"
 import { illegalGoods } from "../data/illegalGoods.js"
 import { printTradeRoute } from "../pipeline/printData.js"
 import { generateRouteMsg } from "./printData.js"
+import { settings } from "../settings.js"
 
 function getStationStock(stationID) {
   const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
@@ -27,8 +27,9 @@ function getSystemDiffs(stationsA, stationsB) {
   for (const stationA of stationsA) {
     for (const stationB of stationsB) {
       const diffs = calcPrices(stationA.id, stationB.id)
-      const highest = findHighestDiff(diffs)
-      const lowest = findLowestDiff(diffs)
+      const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
+      const highest = findHighestDiff(filteredDiffs)
+      const lowest = findLowestDiff(filteredDiffs)
       const labeledDiffs = {
         diffsHighest: highest,
         diffsLowest: lowest,
@@ -40,6 +41,7 @@ function getSystemDiffs(stationsA, stationsB) {
       systemDiffs.push(labeledDiffs)
     }
   }
+
   return systemDiffs
 }
 /*
@@ -60,7 +62,7 @@ SystemDiff:
 
 DiffEntry:
   { 
-    [goodsName]: number,  // dynamic key: price
+    item: string,         // goods name
     priceDiff: number     // profit
   }
 */
@@ -106,8 +108,11 @@ export function compareStations(stationAId, stationBId) {
     illegal: true,
   })
 
-  generateRouteMsg(diffs, stationAId, stationBId, { illegal: false })
-  generateRouteMsg(illegalDiffs, stationAId, stationBId, {
+  const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
+  const filteredIllDiffs = filterDiffs(illegalDiffs, settings.ignoredGoods)
+
+  generateRouteMsg(filteredDiffs, stationAId, stationBId, { illegal: false })
+  generateRouteMsg(filteredIllDiffs, stationAId, stationBId, {
     illegal: true,
   })
 }
@@ -160,6 +165,11 @@ export function formatGoodsList(goodsArray, reverse = false) {
   }
 }
 
-export function filterGoods(goods) {
+export function filterGoods(goods, blacklist) {
   return goods.filter(([name]) => !blacklist.includes(name))
+}
+
+// takes: {item:string, priceDiff: number}[] as first arg
+export function filterDiffs(diffs, blacklist) {
+  return diffs.filter((diff) => !blacklist.includes(diff.item))
 }
