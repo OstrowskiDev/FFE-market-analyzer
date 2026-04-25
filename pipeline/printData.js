@@ -1,6 +1,5 @@
 import fs from "fs"
 import {
-  calcPrices,
   findHighestDiff,
   findLowestDiff,
   formatGoodsList,
