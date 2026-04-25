@@ -1,3 +1,5 @@
+import { settings } from "../settings.js"
+
 export function renderHeader() {
   console.log("====== FFE MARKET NAVIGATOR ======")
 }
@@ -29,6 +31,13 @@ export function progressBar(duration = 2000) {
   })
 }
 
+export function progressBarWrapper(duration) {
+  if (settings.noFluff) {
+    return Promise.resolve()
+  }
+  return progressBar(duration)
+}
+
 export function typeText(text, speed = 20) {
   return new Promise((resolve) => {
     let i = 0
@@ -44,4 +53,12 @@ export function typeText(text, speed = 20) {
       }
     }, speed)
   })
+}
+
+export function typeTextWrapper(text, speed) {
+  if (settings.noFluff) {
+    console.log(text)
+    return Promise.resolve()
+  }
+  return typeText(text, speed)
 }
