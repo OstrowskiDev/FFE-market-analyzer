@@ -1,8 +1,11 @@
 import fs from "fs"
 import path from "path"
+import { settings } from "../settings.js"
 
-const srcDir = "/home/marcin/.config/dosbox-x/capture"
-const dstDir = "/home/marcin/dev/project-47-FFE-market-analyzer"
+const srcDir = process.env.DOSBOX_X_SCREENSHOTS_PATH || settings.screenshotDir
+
+const dstDir =
+  process.env.FFE_MARKET_NAVIGATOR_ROOT_PATH || settings.ffeMarketNavigatorDir
 
 export function getFilesFromDosbox() {
   const count = 3

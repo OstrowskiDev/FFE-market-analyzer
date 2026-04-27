@@ -1,7 +1,8 @@
 import { ocrSpace } from "ocr-space-api-wrapper"
+import { settings } from "../settings"
 
 export async function runOcr() {
-  const API_KEY = process.env.API_KEY || "helloworld"
+  const API_KEY = process.env.API_KEY || settings.publicFreeApiKey
   let result
   try {
     // Using the OCR.space default free API key (max 10reqs in 10mins) + remote file
