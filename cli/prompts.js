@@ -9,6 +9,7 @@ import {
 } from "./ui.js"
 import { ask } from "./helpers.js"
 import { settings } from "../settings.js"
+import { checkOcrEngineStatus } from "../pipeline/runOcr.js"
 
 export async function welcomeScreen() {
   await progressBarWrapper(1500)
@@ -16,8 +17,17 @@ export async function welcomeScreen() {
     `\nWelcome aboard Commander ${settings.commanderName ?? ""}!`,
     20,
   )
+  await printOcrApiStatus()
   await ask("\nPress enter to load available commands: ")
   await printOptions()
+}
+
+export async function printOcrApiStatus() {
+  const engine2Up = await checkOcrEngineStatus()
+  if (!engine2Up)
+    console.log(
+      "\nWarning OCR API is offline, scanning station data functionality is not available!",
+    )
 }
 
 export async function printOptions() {
