@@ -2,26 +2,6 @@ import { ocrSpace } from "ocr-space-api-wrapper"
 import { settings } from "../settings.js"
 import { logger } from "../cli/helpers.js"
 
-// Scrapes https://status.ocr.space and returns true/false for Free OCR API Engine 2
-// Returns null if the status page is unreachable or the page structure changed
-export async function checkOcrEngineStatus() {
-  try {
-    const res = await fetch("https://status.ocr.space", {
-      signal: AbortSignal.timeout(5000),
-    })
-    const html = await res.text()
-    // The status page has a table row: "Free OCR API ..." | UP/DOWN | UP/DOWN
-    // Second capture group is Engine 2
-    const match = html.match(
-      /Free OCR API[\s\S]*?<td[^>]*>(UP|DOWN)<\/td>[\s\S]*?<td[^>]*>(UP|DOWN)<\/td>/i,
-    )
-    if (!match) return null
-    return match[2] === "UP"
-  } catch {
-    return null
-  }
-}
-
 export async function runOcr() {
   const API_KEY = process.env.API_KEY || settings.publicFreeApiKey
   let result
@@ -47,4 +27,24 @@ export async function runOcr() {
   }
 
   return result.ParsedResults[0].ParsedText
+}
+
+// Scrapes https://status.ocr.space and returns true/false for Free OCR API Engine 2
+// Returns null if the status page is unreachable or the page structure changed
+export async function checkOcrEngineStatus() {
+  try {
+    const res = await fetch("https://status.ocr.space", {
+      signal: AbortSignal.timeout(5000),
+    })
+    const html = await res.text()
+    // The status page has a table row: "Free OCR API ..." | UP/DOWN | UP/DOWN
+    // Second capture group is Engine 2
+    const match = html.match(
+      /Free OCR API[\s\S]*?<td[^>]*>(UP|DOWN)<\/td>[\s\S]*?<td[^>]*>(UP|DOWN)<\/td>/i,
+    )
+    if (!match) return null
+    return match[2] === "UP"
+  } catch {
+    return null
+  }
 }
