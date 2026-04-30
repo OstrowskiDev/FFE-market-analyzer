@@ -1,5 +1,5 @@
 import { ocrSpace } from "ocr-space-api-wrapper"
-import { settings } from "../settings"
+import { settings } from "../settings.js"
 
 export async function runOcr() {
   const API_KEY = process.env.API_KEY || settings.publicFreeApiKey
