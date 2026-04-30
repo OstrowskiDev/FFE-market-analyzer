@@ -1,4 +1,5 @@
 import { dictionary } from "../data/dictionary.js"
+import { logger } from "../cli/helpers.js"
 
 export function parseOcr(ocrOutput) {
   const raw = ocrOutput
@@ -13,7 +14,7 @@ export function parseOcr(ocrOutput) {
       return [name, price]
     })
 
-  console.log("parseOCR result:", result)
+  logger("parseOCR result:", result)
   return result
 }
 

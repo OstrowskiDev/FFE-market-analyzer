@@ -1,4 +1,5 @@
 import { Jimp } from "jimp"
+import { logger } from "../cli/helpers.js"
 
 export async function preprocessImage(file) {
   const image = await Jimp.read(file)
@@ -9,8 +10,8 @@ export async function preprocessImage(file) {
   // FAZA 3 grayscale
   image.greyscale()
   await image.write("debug_grayscale.png")
-  console.log("After grayscale")
-  console.log("Saved: debug_grayscale.png")
+  logger("After grayscale")
+  logger("Saved: debug_grayscale.png")
 
   // FAZA 3.5 - pre-crop, tylko jeśli screenshoty są pobierane z F12+p dosbox-x:
   {
@@ -68,8 +69,8 @@ export async function preprocessImage(file) {
   minY = Math.max(0, minY - padding)
   maxY = Math.min(height - 1, maxY + padding)
 
-  console.log(`Bounding box: x=${minX}-${maxX}, y=${minY}-${maxY}`)
-  console.log(`Content size: ${maxX - minX} x ${maxY - minY} px`)
+  logger(`Bounding box: x=${minX}-${maxX}, y=${minY}-${maxY}`)
+  logger(`Content size: ${maxX - minX} x ${maxY - minY} px`)
 
   // FAZA 4c: crop do bounding box
   image.crop({ x: minX, y: minY, w: maxX - minX, h: maxY - minY })
@@ -89,10 +90,10 @@ export async function preprocessImage(file) {
       image.bitmap.data[idx + 2] = 0
     }
   }
-  console.log(
+  logger(
     `Blacked out Credits sign: ${CREDITS_START}-${CREDITS_END} (x=${creditsX1}-${creditsX2})`,
   )
 
   await image.write("debug_threshold.png")
-  console.log("Saved: debug_threshold.png")
+  logger("Saved: debug_threshold.png")
 }
