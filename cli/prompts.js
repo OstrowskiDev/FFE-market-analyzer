@@ -8,10 +8,14 @@ import {
   progressBarWrapper,
 } from "./ui.js"
 import { ask } from "./helpers.js"
+import { settings } from "../settings.js"
 
 export async function welcomeScreen() {
   await progressBarWrapper(1500)
-  await typeTextWrapper("\nWelcome aboard Commander!", 20)
+  await typeTextWrapper(
+    `\nWelcome aboard Commander ${settings.commanderName ?? ""}!`,
+    20,
+  )
   await ask("\nPress enter to load available commands: ")
   await printOptions()
 }
