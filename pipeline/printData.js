@@ -53,3 +53,23 @@ export function printTradeRoute(route, options = {}) {
     `\n=======================================${isIllegal ? "=======" : ""}\n`,
   )
 }
+
+export function printStationData(station) {
+  const header = `========= ${station.name.toUpperCase()} (${station.system}) ===========`
+  const footer = "=".repeat(header.length - 1)
+
+  console.log(`\n${header}`)
+  console.log(`ID: ${station.id}\n`)
+  console.log(`  ${"goods".padEnd(22)} price`)
+  console.log(`  ${"-".repeat(28)}`)
+
+  const goods = Object.entries(station.goods)
+  const formatted = goods.map(([name, price]) => [name, price.toFixed(1)])
+  const maxPriceLen = Math.max(...formatted.map(([, p]) => p.length))
+
+  for (const [name, price] of formatted) {
+    console.log(`  ${name.padEnd(18)} +${price.padStart(maxPriceLen)}¢`)
+  }
+
+  console.log(`\n${footer}\n`)
+}
