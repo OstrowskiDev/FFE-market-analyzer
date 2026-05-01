@@ -1,20 +1,15 @@
 import { rl } from "./rl.js"
 import { compareStations, compareSystems } from "../pipeline/analyzeData.js"
 import { scanStation } from "../pipeline/pipeline.js"
-import {
-  typeTextWrapper,
-  clearScreen,
-  renderHeader,
-  progressBarWrapper,
-} from "./ui.js"
-import { ask } from "./helpers.js"
-import { settings } from "../settings.js"
+import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { checkOcrEngineStatus } from "../pipeline/runOcr.js"
+import { loadSettings } from "../data/settingsIO.js"
+import { ask } from "./helpers.js"
 
 export async function welcomeScreen() {
-  await progressBarWrapper(1500)
+  const { commanderName } = loadSettings()
   await typeTextWrapper(
-    `\nWelcome aboard Commander ${settings.commanderName ?? ""}!`,
+    `\nWelcome aboard Commander ${commanderName ?? ""}!`,
     20,
   )
   await printOcrApiStatus()

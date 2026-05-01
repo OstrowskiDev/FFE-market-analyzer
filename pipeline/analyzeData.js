@@ -2,7 +2,9 @@ import fs from "fs"
 import { illegalGoods } from "../data/illegalGoods.js"
 import { printTradeRoute } from "../pipeline/printData.js"
 import { generateRouteMsg } from "./printData.js"
-import { settings } from "../settings.js"
+import { loadSettings } from "../data/settingsIO.js"
+
+const settings = loadSettings()
 
 function getStationStock(stationID) {
   const rawStations = fs.readFileSync("./data/stations.json", "utf-8")

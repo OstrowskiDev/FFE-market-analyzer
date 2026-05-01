@@ -1,13 +1,13 @@
 import fs from "fs"
 import path from "path"
-import { settings } from "../settings.js"
-
-const srcDir = process.env.DOSBOX_X_SCREENSHOTS_PATH || settings.screenshotDir
-
-const dstDir =
-  process.env.FFE_MARKET_NAVIGATOR_ROOT_PATH || settings.ffeMarketNavigatorDir
+import { loadSettings } from "../data/settingsIO.js"
 
 export function getFilesFromDosbox() {
+  const settings = loadSettings()
+  const srcDir = process.env.DOSBOX_X_SCREENSHOTS_PATH || settings.screenshotDir
+  const dstDir =
+    process.env.FFE_MARKET_NAVIGATOR_ROOT_PATH || settings.ffeMarketNavigatorDir
+
   const count = 3
   const files = fs.readdirSync(srcDir)
 

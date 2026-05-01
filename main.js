@@ -1,8 +1,25 @@
 import "dotenv/config"
-import { clearScreen, renderHeader } from "./cli/ui.js"
+import os from "os"
+import path from "path"
+import { clearScreen, progressBarWrapper, renderHeader } from "./cli/ui.js"
 import { welcomeScreen } from "./cli/prompts.js"
+import {
+  checkCommanderName,
+  checkDosboxXCapturePath,
+  checkRootPath,
+} from "./cli/setSettings.js"
 
 async function main() {
+  clearScreen()
+  renderHeader()
+  await progressBarWrapper(1500)
+  await checkCommanderName()
+  await checkRootPath()
+
+  clearScreen()
+  renderHeader()
+  await checkDosboxXCapturePath()
+
   clearScreen()
   renderHeader()
   welcomeScreen()

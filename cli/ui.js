@@ -1,4 +1,6 @@
-import { settings } from "../settings.js"
+import { loadSettings } from "../data/settingsIO.js"
+
+const settings = loadSettings()
 
 export function renderHeader() {
   console.log("====== FFE MARKET NAVIGATOR ======")

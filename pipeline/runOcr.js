@@ -1,8 +1,9 @@
 import { ocrSpace } from "ocr-space-api-wrapper"
-import { settings } from "../settings.js"
 import { logger } from "../cli/helpers.js"
+import { loadSettings } from "../data/settingsIO.js"
 
 export async function runOcr() {
+  const settings = loadSettings()
   const API_KEY = process.env.API_KEY || settings.publicFreeApiKey
   let result
   try {
