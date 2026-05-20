@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import { illegalGoods } from "./illegalGoods.js"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
-import { stationsPath, stationsTempPath } from "../src/config/paths.js"
+import { stationsPath, stationsTempPath } from "../config/paths.js"
 
 export async function getStations() {
   const raw = await fs.readFile(stationsPath, "utf-8")

@@ -1,9 +1,9 @@
 import fs from "fs"
 import { illegalGoods } from "../data/illegalGoods.js"
-import { printTradeRoute } from "../pipeline/printData.js"
+import { printTradeRoute } from "./printData.js"
 import { generateRouteMsg } from "./printData.js"
 import { loadSettings } from "../data/settingsIO.js"
-import { stationsPath } from "../src/config/paths.js"
+import { stationsPath } from "../config/paths.js"
 
 const settings = loadSettings()
 

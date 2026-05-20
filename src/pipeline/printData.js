@@ -4,7 +4,7 @@ import {
   findLowestDiff,
   formatGoodsList,
 } from "./analyzeData.js"
-import { stationsPath } from "../src/config/paths.js"
+import { stationsPath } from "../config/paths.js"
 
 export function generateRouteMsg(
   diffs,

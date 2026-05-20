@@ -1,5 +1,5 @@
 import fs from "fs/promises"
-import { stationsPath } from "../src/config/paths.js"
+import { stationsPath } from "../../src/config/paths.js"
 
 export async function checkGoodsRange(name) {
   const raw = await fs.readFile(stationsPath, "utf-8")

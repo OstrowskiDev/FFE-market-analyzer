@@ -1,7 +1,7 @@
 import fs from "fs"
 import path from "path"
 import { loadSettings } from "../data/settingsIO.js"
-import { projectRoot, imagesDir } from "../src/config/paths.js"
+import { projectRoot, imagesDir } from "../config/paths.js"
 
 export function getFilesFromDosbox() {
   const settings = loadSettings()

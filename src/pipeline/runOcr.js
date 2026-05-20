@@ -1,5 +1,5 @@
 import { ocrSpace } from "ocr-space-api-wrapper"
-import { logger } from "../src/cli/helpers.js"
+import { logger } from "../cli/helpers.js"
 import { loadSettings } from "../data/settingsIO.js"
 
 export async function runOcr() {

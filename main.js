@@ -1,12 +1,12 @@
 import "dotenv/config"
 import os from "os"
 import path from "path"
-import { clearScreen, progressBarWrapper, renderHeader } from "./cli/ui.js"
-import { welcomeScreen } from "./cli/prompts.js"
+import { clearScreen, progressBarWrapper, renderHeader } from "./src/cli/ui.js"
+import { welcomeScreen } from "./src/cli/prompts.js"
 import {
   checkCommanderName,
   checkDosboxXCapturePath,
-} from "./cli/setSettings.js"
+} from "./src/cli/setSettings.js"
 
 async function main() {
   clearScreen()

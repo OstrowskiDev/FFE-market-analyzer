@@ -1,5 +1,5 @@
 import { dictionary } from "../data/dictionary.js"
-import { logger } from "../src/cli/helpers.js"
+import { logger } from "../cli/helpers.js"
 
 export function parseOcr(ocrOutput) {
   const raw = ocrOutput

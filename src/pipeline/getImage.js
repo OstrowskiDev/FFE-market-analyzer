@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { projectRoot, imagesDir } from "../src/config/paths.js"
+import { projectRoot, imagesDir } from "../config/paths.js"
 
 export function getImages() {
   const imagesNum = 3
