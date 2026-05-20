@@ -1,9 +1,10 @@
 import fs from "fs/promises"
 import { illegalGoods } from "./illegalGoods.js"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
+import { stationsPath, stationsTempPath } from "../src/config/paths.js"
 
 export async function getStations() {
-  const raw = await fs.readFile("data/stations.json", "utf-8")
+  const raw = await fs.readFile(stationsPath, "utf-8")
   const data = raw.trim() ? JSON.parse(raw) : {}
   return data
 }
@@ -29,9 +30,8 @@ export async function saveStation(station) {
       [station.id]: station,
     }
     //atomic write pattern - to prevent data loss when write fails
-    const tempPath = "data/stations.tmp.json"
-    await fs.writeFile(tempPath, JSON.stringify(newStations, null, 2))
-    await fs.rename(tempPath, "data/stations.json")
+    await fs.writeFile(stationsTempPath, JSON.stringify(newStations, null, 2))
+    await fs.rename(stationsTempPath, stationsPath)
     console.log("Station saved successfully!")
   } catch (err) {
     console.log("Error while saving station.JSON data:", err)

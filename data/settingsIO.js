@@ -1,11 +1,10 @@
 import fs from "fs"
-
-const SETTINGS_PATH = "./settings.json"
+import { settingsPath } from "../src/config/paths.js"
 
 export function loadSettings() {
-  return JSON.parse(fs.readFileSync(SETTINGS_PATH, "utf-8"))
+  return JSON.parse(fs.readFileSync(settingsPath, "utf-8"))
 }
 
 export function saveSettings(settings) {
-  fs.writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2))
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2))
 }

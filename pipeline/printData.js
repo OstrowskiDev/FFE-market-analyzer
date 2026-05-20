@@ -4,6 +4,7 @@ import {
   findLowestDiff,
   formatGoodsList,
 } from "./analyzeData.js"
+import { stationsPath } from "../src/config/paths.js"
 
 export function generateRouteMsg(
   diffs,
@@ -11,7 +12,7 @@ export function generateRouteMsg(
   targetStationID,
   options = {},
 ) {
-  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
 
   const stationA = stations[currentStationID]

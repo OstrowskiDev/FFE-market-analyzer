@@ -3,11 +3,12 @@ import { illegalGoods } from "../data/illegalGoods.js"
 import { printTradeRoute } from "../pipeline/printData.js"
 import { generateRouteMsg } from "./printData.js"
 import { loadSettings } from "../data/settingsIO.js"
+import { stationsPath } from "../src/config/paths.js"
 
 const settings = loadSettings()
 
 function getStationStock(stationID) {
-  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
   const station = stations[stationID]
   if (!station) throw new Error(`Unknown station: ${stationID}`)
@@ -15,7 +16,7 @@ function getStationStock(stationID) {
 }
 
 function getStationsBySystem(name) {
-  const rawStations = fs.readFileSync("./data/stations.json", "utf-8")
+  const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
   const filtered = Object.values(stations).filter(
     (station) => station.system === name,

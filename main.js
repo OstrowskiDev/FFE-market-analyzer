@@ -6,7 +6,6 @@ import { welcomeScreen } from "./cli/prompts.js"
 import {
   checkCommanderName,
   checkDosboxXCapturePath,
-  checkRootPath,
 } from "./cli/setSettings.js"
 
 async function main() {
@@ -14,7 +13,6 @@ async function main() {
   renderHeader()
   await progressBarWrapper(1500)
   await checkCommanderName()
-  await checkRootPath()
 
   clearScreen()
   renderHeader()

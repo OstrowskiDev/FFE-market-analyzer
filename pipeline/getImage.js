@@ -1,9 +1,11 @@
 import fs from "fs"
 import path from "path"
+import { projectRoot, imagesDir } from "../src/config/paths.js"
 
 export function getImages() {
   const imagesNum = 3
-  const files = fs.readdirSync(".")
+  //!!!! implement imagesDir instead of projectRoot
+  const files = fs.readdirSync(projectRoot)
 
   const images = files.filter(
     (file) =>

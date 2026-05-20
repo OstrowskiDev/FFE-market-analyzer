@@ -15,14 +15,6 @@ export async function checkCommanderName() {
   }
 }
 
-export async function checkRootPath() {
-  const settings = loadSettings()
-  if (!settings.ffeMarketNavigatorDir) {
-    const rootPath = process.cwd()
-    saveSettings({ ...settings, ffeMarketNavigatorDir: rootPath })
-  }
-}
-
 export async function checkDosboxXCapturePath() {
   const settings = loadSettings()
   if (!settings.screenshotDir) {
