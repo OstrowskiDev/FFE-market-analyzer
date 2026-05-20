@@ -36,7 +36,7 @@
     "name": "Old Blackelk",
     "id": "GateOldBlackelk"
   },
-  "GateOldCurie": {
+  "GatOldCurie": {
     "goods": {
       "Military Fuel": 49.3,
       "Hand Weapons": 533.1,
@@ -116,7 +116,7 @@
       "Luxury Goods": 1326,
       "Heavy Plastics": 36.7,
       "Metal Alloys": 26.5,
-      "Precious Metals": 1110.9
+      "Precious Metals": 1710.9
     },
     "system": "Alioth",
     "name": "Aachen Town",
@@ -143,7 +143,7 @@
       "Luxury Goods": 1322.8,
       "Heavy Plastics": 36.2,
       "Metal Alloys": 25,
-      "Precious Metals": 1113.9
+      "Precious Metals": 1713.9
     },
     "system": "Alioth",
     "name": "Gotham Park",
@@ -420,7 +420,7 @@
       "Luxury Goods": 1304.8,
       "Heavy Plastics": 40.1,
       "Metal Alloys": 28.8,
-      "Precious Metals": 1115.1
+      "Precious Metals": 1715.1
     },
     "system": "Eta Cassiopeia",
     "name": "Nauton Estates",
@@ -440,7 +440,7 @@
       "Luxury Goods": 1484.4,
       "Heavy Plastics": 28.5,
       "Metal Alloys": 19.8,
-      "Precious Metals": 1119.9,
+      "Precious Metals": 1719.9,
       "Gem Stones": 3074.6,
       "Grain": 42.9,
       "Fruit and Veg.": 121.6,
@@ -460,7 +460,7 @@
   },
   "SolAbrahamLincoln": {
     "goods": {
-      "Precious Metals": 1117.4,
+      "Precious Metals": 1717.4,
       "Gem Stones": 2998.9,
       "Military Fuel": 49.8,
       "Industrial Parts": 121,
@@ -506,37 +506,10 @@
       "Luxury Goods": 1503.2,
       "Heavy Plastics": 30,
       "Metal Alloys": 20.4,
-      "Precious Metals": 1131.3
+      "Precious Metals": 1731.3
     },
     "system": "Bernard Star",
     "name": "Boston Base",
     "id": "BerBostonBase"
-  },
-  "TesNewpipeline": {
-    "goods": {
-      "Gem Stones": 3015.8,
-      "Military Fuel": 49.7,
-      "Industrial Parts": 102.1,
-      "Computers": 349.9,
-      "Air Processors": 193.2,
-      "Farm Machinery": 64,
-      "Robots": 569.1,
-      "Alien Artefacts": 2342.5,
-      "Chaff": 95.3,
-      "Grain": 47.6,
-      "Fruit and Veg.": 124.7,
-      "Animal Meat": 112.7,
-      "Synthetic Meat": 16.9,
-      "Liquor": 419.5,
-      "Medicines": 523.9,
-      "Fertilizer": 12.1,
-      "Luxury Goods": 1503.2,
-      "Heavy Plastics": 30,
-      "Metal Alloys": 20.4,
-      "Precious Metals": 1131.3
-    },
-    "system": "Test",
-    "name": "Newpipeline",
-    "id": "TesNewpipeline"
   }
 }
