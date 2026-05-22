@@ -10,7 +10,7 @@ export function clearScreen() {
   console.clear()
 }
 
-export function progressBar(duration = 2000) {
+export function progressBar(duration = 2000): Promise<void> {
   return new Promise((resolve) => {
     const total = 30
     let current = 0
@@ -33,14 +33,14 @@ export function progressBar(duration = 2000) {
   })
 }
 
-export function progressBarWrapper(duration) {
+export function progressBarWrapper(duration: number): Promise<void> {
   if (settings.noFluff) {
     return Promise.resolve()
   }
   return progressBar(duration)
 }
 
-export function typeText(text, speed = 20) {
+export function typeText(text: string, speed = 20): Promise<void> {
   return new Promise((resolve) => {
     let i = 0
 
@@ -57,7 +57,7 @@ export function typeText(text, speed = 20) {
   })
 }
 
-export function typeTextWrapper(text, speed) {
+export function typeTextWrapper(text: string, speed = 20): Promise<void> {
   if (settings.noFluff) {
     console.log(text)
     return Promise.resolve()

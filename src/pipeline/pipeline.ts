@@ -13,12 +13,11 @@ import {
   changePriceToNum,
 } from "./OCRcorrection.js"
 
-export async function scanStation(system, name) {
+export async function scanStation(system: string, name: string): Promise<void> {
   getFilesFromDosbox()
   const newestImages = getImages()
   const ocrDataArr = []
   for (let i = 0; i < 3; i++) {
-    // for (const image of newestImages) {
     await preprocessImage(newestImages[i])
     const ocrOutput = await runOcr()
     let goods = parseOcr(ocrOutput) // out [String, "number"]
