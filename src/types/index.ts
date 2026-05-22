@@ -9,8 +9,6 @@ export interface Station {
 
 export type Goods = Record<string, number>
 
-export type SystemDiffs = Array<SystemDiff>
-
 export interface SystemDiff {
   diffsHighest: DiffEntry[] //sorted desc (top N) A->B
   diffsLowest: DiffEntry[] //sorted asc (top N) B->A (negative num)
@@ -25,25 +23,14 @@ export interface DiffEntry {
   priceDiff: number //profit
 }
 
-/*
-RETURNS:
-SystemDiff[]
+export interface BestRoute {
+  bestBuy: DiffEntry[]
+  bestSell: DiffEntry[]
+  profit: number
+  stationNameA: string
+  stationNameB: string
+  systemA: string
+  systemB: string
+}
 
-SystemDiff:
-[
-  {
-    diffsHighest: DiffEntry[], //sorted desc (top N) A->B
-    diffsLowest:  DiffEntry[], //sorted asc (top N) B->A (negative num)
-    stationNameA: string,
-    stationNameB: string,
-    systemA: string,
-    systemB: string
-  }
-]
-
-DiffEntry:
-  { 
-    item: string,         // goods name
-    priceDiff: number     // profit
-  }
-*/
+export type ParsedOCRGoods = Array<[string, string]> // [name, 'number'][]
