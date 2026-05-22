@@ -4,10 +4,19 @@ import { printTradeRoute } from "./printData.js"
 import { generateRouteMsg } from "./printData.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { stationsPath } from "../config/paths.js"
+import type {
+  BestRoute,
+  DiffEntry,
+  Goods,
+  ParsedOCRGoods,
+  Station,
+  Stations,
+  SystemDiff,
+} from "../types/index.js"
 
 const settings = loadSettings()
 
-function getStationStock(stationID) {
+function getStationStock(stationID: string): Goods {
   const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
   const station = stations[stationID]
@@ -15,9 +24,9 @@ function getStationStock(stationID) {
   return station.goods
 }
 
-function getStationsBySystem(name) {
+function getStationsBySystem(name: string): Station[] {
   const rawStations = fs.readFileSync(stationsPath, "utf-8")
-  const stations = JSON.parse(rawStations)
+  const stations: Stations = JSON.parse(rawStations)
   const filtered = Object.values(stations).filter(
     (station) => station.system === name,
   )
@@ -25,11 +34,16 @@ function getStationsBySystem(name) {
   return filtered
 }
 
-function getSystemDiffs(stationsA, stationsB) {
+function getSystemDiffs(
+  stationsA: Station[],
+  stationsB: Station[],
+): SystemDiff[] {
   const systemDiffs = []
   for (const stationA of stationsA) {
     for (const stationB of stationsB) {
+      //!!!! add options.illegal logic to calc prices:
       const diffs = calcPrices(stationA.id, stationB.id)
+      //!!!! check if filterDiffs also needs options.illegal
       const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
       const highest = findHighestDiff(filteredDiffs)
       const lowest = findLowestDiff(filteredDiffs)
@@ -47,46 +61,33 @@ function getSystemDiffs(stationsA, stationsB) {
 
   return systemDiffs
 }
-/*
-RETURNS:
-SystemDiff[]
-
-SystemDiff:
-[
-  {
-    diffsHighest: DiffEntry[], //sorted desc (top N) A->B
-    diffsLowest:  DiffEntry[], //sorted asc (top N) B->A (negative num)
-    stationNameA: string,
-    stationNameB: string,
-    systemA: string,
-    systemB: string
-  }
-]
-
-DiffEntry:
-  { 
-    item: string,         // goods name
-    priceDiff: number     // profit
-  }
-*/
 
 //!!!! decyzja: czy funkcja ma drukować legal/illegal czy both?
-export function compareSystems(nameA, nameB, options = {}) {
+//!!!! ważne: obecnie logika dla liczenia illegal routes nie istnieje wewnątrz tego body:
+export function compareSystems(
+  nameA: string,
+  nameB: string,
+  options = { illegal: false },
+) {
   const stationsA = getStationsBySystem(nameA)
   const stationsB = getStationsBySystem(nameB)
 
+  // add logic for options.illegal here:
+
   const systemDiffs = getSystemDiffs(stationsA, stationsB)
+
+  //pass systemDiffs from legal/illegal routes below:
   const bestRoute = findBestRoute(systemDiffs)
   printTradeRoute(bestRoute, options)
 }
 
-function findBestRoute(systemDiffs) {
+function findBestRoute(systemDiffs: SystemDiff[]): BestRoute {
   let bestRoute = null
 
   for (const route of systemDiffs) {
     const highest = route.diffsHighest
     const lowest = route.diffsLowest
-    const profit = highest.priceDiff + Math.abs(lowest.priceDiff)
+    const profit = highest[0].priceDiff + Math.abs(lowest[0].priceDiff)
 
     if (!bestRoute || profit > bestRoute.profit) {
       bestRoute = {
@@ -100,28 +101,31 @@ function findBestRoute(systemDiffs) {
       }
     }
   }
-
+  if (!bestRoute) throw new Error("No routes found")
   return bestRoute
 }
 
-//!!!! decyzja: czy funkcja ma drukować legal/illegal czy both?
-export function compareStations(stationAId, stationBId) {
-  const diffs = calcPrices(stationAId, stationBId)
-  const illegalDiffs = calcPrices(stationAId, stationBId, {
-    illegal: true,
-  })
-
-  const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
-  const filteredIllDiffs = filterDiffs(illegalDiffs, settings.ignoredGoods)
-
-  generateRouteMsg(filteredDiffs, stationAId, stationBId, { illegal: false })
-  generateRouteMsg(filteredIllDiffs, stationAId, stationBId, {
-    illegal: true,
-  })
+export function compareStations(
+  stationAId: string,
+  stationBId: string,
+  options: { illegal: boolean } = { illegal: false },
+): void {
+  if (!options.illegal) {
+    const diffs = calcPrices(stationAId, stationBId)
+    const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
+    generateRouteMsg(filteredDiffs, stationAId, stationBId, options)
+  } else {
+    const illegalDiffs = calcPrices(stationAId, stationBId, options)
+    const filteredIllDiffs = filterDiffs(illegalDiffs, settings.ignoredGoods)
+    generateRouteMsg(filteredIllDiffs, stationAId, stationBId, options)
+  }
 }
 
-// returns [{<goodsName>: number (price), priceDiff: number (profit)}, ...]
-export function calcPrices(stationAId, stationBId, options = {}) {
+export function calcPrices(
+  stationAId: string,
+  stationBId: string,
+  options: { illegal: boolean } = { illegal: false },
+): DiffEntry[] {
   const diffs = []
   const currentGoods = getStationStock(stationAId)
   const targetGoods = getStationStock(stationBId)
@@ -149,30 +153,30 @@ export function calcPrices(stationAId, stationBId, options = {}) {
   return diffs
 }
 
-export function findHighestDiff(diffs) {
+export function findHighestDiff(diffs: DiffEntry[]): DiffEntry[] {
   return [...diffs].sort((a, b) => b.priceDiff - a.priceDiff).slice(0, 4)
 }
 
-export function findLowestDiff(diffs) {
+export function findLowestDiff(diffs: DiffEntry[]): DiffEntry[] {
   return [...diffs].sort((a, b) => a.priceDiff - b.priceDiff).slice(0, 4)
 }
 
-export function formatGoodsList(goodsArray, reverse = false) {
-  for (const goods of goodsArray) {
-    const value = reverse ? Math.abs(goods.priceDiff) : goods.priceDiff
+export function formatGoodsList(diffs: DiffEntry[], reverse = false): void {
+  for (const diff of diffs) {
+    const value = reverse ? Math.abs(diff.priceDiff) : diff.priceDiff
     const formatted = value.toFixed(1)
 
     console.log(
-      `  ${goods.item.padEnd(18)} +${formatted.toString().padStart(4)}¢`,
+      `  ${diff.item.padEnd(18)} +${formatted.toString().padStart(4)}¢`,
     )
   }
 }
 
-export function filterGoods(goods, blacklist) {
+export function filterGoods(goods: ParsedOCRGoods, blacklist: string[]) {
   return goods.filter(([name]) => !blacklist.includes(name))
 }
 
 // takes: {item:string, priceDiff: number}[] as first arg
-export function filterDiffs(diffs, blacklist) {
+export function filterDiffs(diffs: DiffEntry[], blacklist: string[]) {
   return diffs.filter((diff) => !blacklist.includes(diff.item))
 }
