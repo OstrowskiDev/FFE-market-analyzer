@@ -3,7 +3,7 @@ import path from "path"
 import { loadSettings } from "../data/settingsIO.js"
 import { projectRoot, imagesDir } from "../config/paths.js"
 
-export function getFilesFromDosbox() {
+export function getFilesFromDosbox(): void {
   const settings = loadSettings()
   const srcDir = process.env.DOSBOX_X_SCREENSHOTS_PATH || settings.screenshotDir
   //!!!! implement imagesDir instead of projectRoot

@@ -1,8 +1,7 @@
 import fs from "fs"
-import path from "path"
 import { projectRoot, imagesDir } from "../config/paths.js"
 
-export function getImages() {
+export function getImages(): string[] {
   const imagesNum = 3
   //!!!! implement imagesDir instead of projectRoot
   const fileNames = fs.readdirSync(projectRoot)
