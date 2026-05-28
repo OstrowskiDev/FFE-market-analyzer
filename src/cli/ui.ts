@@ -40,7 +40,7 @@ export function progressBarWrapper(duration: number): Promise<void> {
   return progressBar(duration)
 }
 
-export function typeText(text: string, speed = 20): Promise<void> {
+function typeText(text: string, speed = 20): Promise<void> {
   return new Promise((resolve) => {
     let i = 0
 

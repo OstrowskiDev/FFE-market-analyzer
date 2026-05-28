@@ -8,7 +8,7 @@ import type {
   BestRoute,
   DiffEntry,
   Goods,
-  ParsedOCRGoods,
+  OcrRawGods,
   Station,
   Stations,
   SystemDiff,
@@ -121,7 +121,7 @@ export function compareStations(
   }
 }
 
-export function calcPrices(
+function calcPrices(
   stationAId: string,
   stationBId: string,
   options: { illegal: boolean } = { illegal: false },
@@ -172,11 +172,11 @@ export function formatGoodsList(diffs: DiffEntry[], reverse = false): void {
   }
 }
 
-export function filterGoods(goods: ParsedOCRGoods, blacklist: string[]) {
+export function filterGoods(goods: OcrRawGods, blacklist: string[]) {
   return goods.filter(([name]) => !blacklist.includes(name))
 }
 
 // takes: {item:string, priceDiff: number}[] as first arg
-export function filterDiffs(diffs: DiffEntry[], blacklist: string[]) {
+function filterDiffs(diffs: DiffEntry[], blacklist: string[]) {
   return diffs.filter((diff) => !blacklist.includes(diff.item))
 }

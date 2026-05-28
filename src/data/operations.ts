@@ -1,28 +1,27 @@
 import fs from "fs/promises"
-import { illegalGoods } from "./illegalGoods.js"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
 import { stationsPath, stationsTempPath } from "../config/paths.js"
+import type { Station, Stations } from "../types/index.js"
 
-export async function getStations() {
+async function getStations(): Promise<Stations> {
   const raw = await fs.readFile(stationsPath, "utf-8")
   const data = raw.trim() ? JSON.parse(raw) : {}
   return data
 }
 
-export function createStation(goodsArr, inputSystem, inputStName) {
-  const station = {}
+export function createStation(
+  goodsArr: [string, number][],
+  inputSystem: string,
+  inputStName: string,
+): Station {
   const goods = Object.fromEntries(goodsArr)
-  station.goods = goods
   const system = getSystemName(inputSystem)
-  const stationName = getStationName(inputStName)
-  const stationID = getStationID(system, stationName)
-  station.system = system
-  station.name = stationName
-  station.id = stationID
-  return station
+  const name = getStationName(inputStName)
+  const id = getStationID(system, name)
+  return { goods, system, name, id }
 }
 
-export async function saveStation(station) {
+export async function saveStation(station: Station): Promise<void> {
   try {
     const stations = await getStations()
     const newStations = {
