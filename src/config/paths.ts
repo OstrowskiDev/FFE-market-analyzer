@@ -23,7 +23,3 @@ export {
   stationsPath,
   stationsTempPath,
 }
-
-export function inImg(fileName) {
-  return path.join(paths.imagesDir, fileName)
-}

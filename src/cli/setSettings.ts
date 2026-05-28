@@ -1,7 +1,5 @@
 import os from "os"
 import path from "path"
-import { readFileSync, writeFileSync } from "fs"
-import { fileURLToPath } from "url"
 import { typeTextWrapper } from "./ui.js"
 import { ask } from "./helpers.js"
 import { loadSettings, saveSettings } from "../data/settingsIO.js"

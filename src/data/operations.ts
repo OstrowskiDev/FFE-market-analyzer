@@ -38,27 +38,3 @@ export async function saveStation(station) {
     throw err
   }
 }
-
-function createBlackMarket(goods) {
-  let blackMarket = {}
-  for (const key of illegalGoods.keys()) {
-    if (!goods[key]) {
-      blackMarket[key] = "default"
-    }
-  }
-  return blackMarket
-}
-
-export function addBlackMarket(station) {
-  if (station.blackMarket) {
-    console.log(`Error: Station ${station.name} already has black market`)
-    return
-  }
-  const blackMarket = createBlackMarket(station.goods)
-  station.blackMarket = blackMarket
-}
-
-export function updateBlackMarket(station) {
-  const blackMarket = createBlackMarket(station.goods)
-  station.blackMarket = blackMarket
-}
