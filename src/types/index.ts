@@ -9,6 +9,10 @@ export interface Station {
 
 export type Goods = Record<string, number>
 
+export type OcrRawGods = [string, string][] // [string, 'number'][]
+
+export type OcrParsedGoods = [string, number][]
+
 export interface SystemDiff {
   diffsHighest: DiffEntry[] //sorted desc (top N) A->B
   diffsLowest: DiffEntry[] //sorted asc (top N) B->A (negative num)
@@ -33,4 +37,10 @@ export interface BestRoute {
   systemB: string
 }
 
-export type ParsedOCRGoods = Array<[string, string]> // [name, 'number'][]
+export type Settings = {
+  commanderName: string
+  screenshotDir: string
+  publicFreeApiKey: string
+  noFluff: boolean
+  ignoredGoods: string[]
+}
