@@ -24,7 +24,7 @@ export async function scanStation(system: string, name: string): Promise<void> {
     goods = fuzzyMatchGoods(goods)
     goods = correctCharMissMatch(goods)
     goods = correctPriceRanges(goods)
-    goods = changePriceToNum(goods)
+    goods = changePriceToNum(goods) // out [String, Number]
     goods = filterGoods(goods, blacklist) // remove low value goods eg water
     ocrDataArr.push(goods)
     console.log(`Scan (${i + 1}/3) analyzed successfully`)
