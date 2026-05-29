@@ -1,10 +1,11 @@
 import { dictionary } from "../data/dictionary.js"
 import { logger } from "../cli/helpers.js"
+import type { OcrRawGods } from "../types/index.js"
 
-export function parseOcr(ocrOutput) {
+export function parseOcr(ocrOutput: string): OcrRawGods {
   const raw = ocrOutput
 
-  const result = raw
+  const result: OcrRawGods = raw
     .trim()
     .split("\n")
     .map((line) => line.trim())
@@ -18,12 +19,11 @@ export function parseOcr(ocrOutput) {
   return result
 }
 
-// arg [[name, price], ... ]
-export function fuzzyMatchGoods(parsedData) {
-  let normalizedData = []
+export function fuzzyMatchGoods(parsedData: OcrRawGods): OcrRawGods {
+  let normalizedData: OcrRawGods = []
   for (const item of parsedData) {
     let highestPts = 0
-    let bestMatch = null
+    let bestMatch: [string, string] | null = null
     for (const word of dictionary) {
       let points = 0
       const wordArr = word.split("")
@@ -38,7 +38,7 @@ export function fuzzyMatchGoods(parsedData) {
         bestMatch = [word, item[1]]
       }
     }
-    normalizedData.push(bestMatch)
+    if (bestMatch !== null) normalizedData.push(bestMatch)
     if (highestPts < item[0].length * 0.5) {
       console.warn(
         `fuzzyMatchGoods func poor match detected, ORC output goods name: ${item[0]}`,

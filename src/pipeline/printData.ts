@@ -5,13 +5,19 @@ import {
   formatGoodsList,
 } from "./analyzeData.js"
 import { stationsPath } from "../config/paths.js"
+import type {
+  DiffEntry,
+  RouteOptions,
+  Station,
+  TradeRoute,
+} from "../types/index.js"
 
 export function generateRouteMsg(
-  diffs,
-  currentStationID,
-  targetStationID,
-  options = {},
-) {
+  diffs: DiffEntry[],
+  currentStationID: string,
+  targetStationID: string,
+  options: RouteOptions = { illegal: false },
+): void {
   const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
 
@@ -33,7 +39,10 @@ export function generateRouteMsg(
   printTradeRoute(route, options)
 }
 
-export function printTradeRoute(route, options = {}) {
+export function printTradeRoute(
+  route: TradeRoute,
+  options: RouteOptions = { illegal: false },
+): void {
   const isIllegal = options.illegal
   const { stationNameA, stationNameB, systemA, systemB, bestBuy, bestSell } =
     route
@@ -55,7 +64,7 @@ export function printTradeRoute(route, options = {}) {
   )
 }
 
-export function printStationData(station) {
+export function printStationData(station: Station): void {
   const header = `========= ${station.name.toUpperCase()} (${station.system}) ===========`
   const footer = "=".repeat(header.length - 1)
 

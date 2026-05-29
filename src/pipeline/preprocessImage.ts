@@ -1,7 +1,7 @@
 import { Jimp } from "jimp"
 import { logger } from "../cli/helpers.js"
 
-export async function preprocessImage(file) {
+export async function preprocessImage(file: string): Promise<void> {
   const image = await Jimp.read(file)
 
   // FAZA 2 - poprawienie rozdzielczości dla lepszego rezultatu OCR readera
