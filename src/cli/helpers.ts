@@ -6,7 +6,7 @@ export function ask(question: string): Promise<string> {
   })
 }
 
-export function logger(message: string) {
+export function logger(...args: any[]) {
   if (process.env.NODE_ENV === "production") return
-  console.log(message)
+  console.log(...args)
 }
