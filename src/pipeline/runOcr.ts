@@ -22,9 +22,11 @@ export async function runOcr(): Promise<string> {
   }
 
   if (result.IsErroredOnProcessing) {
-    throw new Error(
-      `OCR API error (code ${result.OCRExitCode}): ${result.ErrorMessage?.join(", ")}`,
-    )
+    const msg = Array.isArray(result.ErrorMessage)
+      ? result.ErrorMessage.join(", ")
+      : result.ErrorMessage
+
+    throw new Error(`OCR API error (code ${result.OCRExitCode}): ${msg}`)
   }
 
   return result.ParsedResults[0].ParsedText
