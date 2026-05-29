@@ -8,7 +8,7 @@ import type {
   BestRoute,
   DiffEntry,
   Goods,
-  OcrRawGods,
+  OcrParsedGoods,
   Station,
   Stations,
   SystemDiff,
@@ -172,7 +172,10 @@ export function formatGoodsList(diffs: DiffEntry[], reverse = false): void {
   }
 }
 
-export function filterGoods(goods: OcrRawGods, blacklist: string[]) {
+export function filterGoods(
+  goods: OcrParsedGoods,
+  blacklist: string[],
+): OcrParsedGoods {
   return goods.filter(([name]) => !blacklist.includes(name))
 }
 
