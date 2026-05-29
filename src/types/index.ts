@@ -27,6 +27,15 @@ export interface DiffEntry {
   priceDiff: number //profit
 }
 
+export interface TradeRoute {
+  bestBuy: DiffEntry[]
+  bestSell: DiffEntry[]
+  stationNameA: string
+  stationNameB: string
+  systemA: string
+  systemB: string
+}
+
 export interface BestRoute {
   bestBuy: DiffEntry[]
   bestSell: DiffEntry[]
@@ -35,6 +44,10 @@ export interface BestRoute {
   stationNameB: string
   systemA: string
   systemB: string
+}
+
+export interface RouteOptions {
+  illegal: boolean
 }
 
 export type Settings = {
