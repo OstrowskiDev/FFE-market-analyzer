@@ -1,11 +1,12 @@
 import fs from "fs"
-import path from "path"
+import { projectRoot, imagesDir } from "../config/paths.js"
 
-export function getImages() {
+export function getImages(): string[] {
   const imagesNum = 3
-  const files = fs.readdirSync(".")
+  //!!!! implement imagesDir instead of projectRoot
+  const fileNames = fs.readdirSync(projectRoot)
 
-  const images = files.filter(
+  const images = fileNames.filter(
     (file) =>
       (file.endsWith(".png") || file.endsWith(".jpg")) &&
       !file.startsWith("debug"),

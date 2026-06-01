@@ -1,4 +1,6 @@
-export function correctCharMissMatch(goods) {
+import type { OcrParsedGoods, OcrRawGods } from "../types/index.js"
+
+export function correctCharMissMatch(goods: OcrRawGods): OcrRawGods {
   return goods.map(([name, price]) => {
     let corrected = ""
     for (const char of price) {
@@ -17,10 +19,10 @@ export function correctCharMissMatch(goods) {
   })
 }
 
-export function correctPriceRanges(goods) {
+export function correctPriceRanges(goods: OcrRawGods): OcrRawGods {
   return goods.map(([name, price]) => {
     if (!goodsPricesToCorrect.includes(name)) return [name, price]
-    if (isNaN(price[0])) {
+    if (/^\D/.test(price)) {
       console.log(
         `correctPriceRanges: expected leading digit but got "${price[0]}", name: ${name}, price: ${price}`,
       )
@@ -31,15 +33,15 @@ export function correctPriceRanges(goods) {
 }
 
 // a, b has to be string type
-function correctLeadingDigit(a, b, string) {
+function correctLeadingDigit(a: string, b: string, string: string) {
   if (string[0] === a) return string.replace(a, b)
   return string
 }
 
 // lista goods w których cenach OCR często błędnie identyfikuje 7 -> 1, bezpieczne do nadpisania przy pierwszej cyfrze bo nigdy nie mogą mieć wartości 1:
-export const goodsPricesToCorrect = ["Robots", "Liquor", "Medicines"]
+const goodsPricesToCorrect = ["Robots", "Liquor", "Medicines"]
 
-export function changePriceToNum(goods) {
+export function changePriceToNum(goods: OcrRawGods): OcrParsedGoods {
   return goods.map(([name, price]) => {
     return [name, parseFloat(price)]
   })

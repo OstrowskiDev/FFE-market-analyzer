@@ -2,7 +2,6 @@ import { rl } from "./rl.js"
 import { compareStations, compareSystems } from "../pipeline/analyzeData.js"
 import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
-import { checkOcrEngineStatus } from "../pipeline/runOcr.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
 
@@ -12,20 +11,11 @@ export async function welcomeScreen() {
     `\nWelcome aboard Commander ${commanderName ?? ""}!`,
     20,
   )
-  await printOcrApiStatus()
   await ask("\nPress enter to load available commands: ")
   await printOptions()
 }
 
-export async function printOcrApiStatus() {
-  const engine2Up = await checkOcrEngineStatus()
-  if (!engine2Up)
-    console.log(
-      "\nWarning OCR API is offline, scanning station data functionality is not available!",
-    )
-}
-
-export async function printOptions() {
+async function printOptions() {
   clearScreen()
   renderHeader()
 

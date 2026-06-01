@@ -1,7 +1,8 @@
 import { readFileSync } from "fs"
+import { stationsPath } from "../../src/config/paths.js"
 
 export function verifyKeyIdConsistency() {
-  const stations = JSON.parse(readFileSync("./data/stations.json", "utf-8"))
+  const stations = JSON.parse(readFileSync(stationsPath, "utf-8"))
 
   const mismatches = []
 

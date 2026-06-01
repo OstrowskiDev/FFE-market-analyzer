@@ -1,12 +1,10 @@
 import os from "os"
 import path from "path"
-import { readFileSync, writeFileSync } from "fs"
-import { fileURLToPath } from "url"
 import { typeTextWrapper } from "./ui.js"
 import { ask } from "./helpers.js"
 import { loadSettings, saveSettings } from "../data/settingsIO.js"
 
-export async function checkCommanderName() {
+export async function checkCommanderName(): Promise<void> {
   const settings = loadSettings()
   if (!settings.commanderName) {
     await typeTextWrapper("\nFirst start-up detected.")
@@ -15,15 +13,7 @@ export async function checkCommanderName() {
   }
 }
 
-export async function checkRootPath() {
-  const settings = loadSettings()
-  if (!settings.ffeMarketNavigatorDir) {
-    const rootPath = process.cwd()
-    saveSettings({ ...settings, ffeMarketNavigatorDir: rootPath })
-  }
-}
-
-export async function checkDosboxXCapturePath() {
+export async function checkDosboxXCapturePath(): Promise<void> {
   const settings = loadSettings()
   if (!settings.screenshotDir) {
     const defaultPath = path.join(
