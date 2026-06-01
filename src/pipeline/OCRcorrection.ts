@@ -39,7 +39,7 @@ function correctLeadingDigit(a: string, b: string, string: string) {
 }
 
 // lista goods w których cenach OCR często błędnie identyfikuje 7 -> 1, bezpieczne do nadpisania przy pierwszej cyfrze bo nigdy nie mogą mieć wartości 1:
-export const goodsPricesToCorrect = ["Robots", "Liquor", "Medicines"]
+const goodsPricesToCorrect = ["Robots", "Liquor", "Medicines"]
 
 export function changePriceToNum(goods: OcrRawGods): OcrParsedGoods {
   return goods.map(([name, price]) => {

@@ -15,7 +15,7 @@ export async function welcomeScreen() {
   await printOptions()
 }
 
-export async function printOptions() {
+async function printOptions() {
   clearScreen()
   renderHeader()
 

@@ -10,7 +10,7 @@ export function clearScreen() {
   console.clear()
 }
 
-export function progressBar(duration = 2000): Promise<void> {
+function progressBar(duration = 2000): Promise<void> {
   return new Promise((resolve) => {
     const total = 30
     let current = 0
