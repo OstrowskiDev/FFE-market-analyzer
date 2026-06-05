@@ -1,16 +1,17 @@
-import fs from "fs/promises"
+import fs from "fs"
+import fsp from "fs/promises"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
 import { stationsPath, stationsTempPath } from "../config/paths.js"
 import type { Station, Stations } from "../types/index.js"
 
-async function getStations(): Promise<Stations> {
-  const raw = await fs.readFile(stationsPath, "utf-8")
+function getStations(): Stations {
+  const raw = fs.readFileSync(stationsPath, "utf-8")
   const data = raw.trim() ? JSON.parse(raw) : {}
   return data
 }
 
-export async function getStation(id: string): Promise<Station | null> {
-  const stations = await getStations()
+export function getStation(id: string): Station | null {
+  const stations = getStations()
   return stations[id] ?? null
 }
 
@@ -28,14 +29,14 @@ export function createStation(
 
 export async function saveStation(station: Station): Promise<void> {
   try {
-    const stations = await getStations()
+    const stations = getStations()
     const newStations = {
       ...stations,
       [station.id]: station,
     }
     //atomic write pattern - to prevent data loss when write fails
-    await fs.writeFile(stationsTempPath, JSON.stringify(newStations, null, 2))
-    await fs.rename(stationsTempPath, stationsPath)
+    await fsp.writeFile(stationsTempPath, JSON.stringify(newStations, null, 2))
+    await fsp.rename(stationsTempPath, stationsPath)
     console.log("Station saved successfully!")
   } catch (err) {
     console.log("Error while saving station.JSON data:", err)

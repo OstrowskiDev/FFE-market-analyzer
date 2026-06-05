@@ -1,8 +1,8 @@
-import fs from "fs/promises"
+import fs from "fs"
 import { stationsPath } from "../../src/config/paths.js"
 
-export async function checkGoodsRange(name) {
-  const raw = await fs.readFile(stationsPath, "utf-8")
+export function checkGoodsRange(name) {
+  const raw = fs.readFileSync(stationsPath, "utf-8")
   const stationsData = raw.trim() ? JSON.parse(raw) : {}
   const stations = Object.values(stationsData)
 

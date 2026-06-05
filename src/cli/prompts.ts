@@ -122,7 +122,7 @@ async function promptForValidStationId(
   repeatMsg: string,
 ): Promise<string> {
   let stationID = await ask(firstMsg)
-  while (!(await getStation(stationID))) {
+  while (!getStation(stationID)) {
     stationID = await ask(repeatMsg)
   }
   return stationID
