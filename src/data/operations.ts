@@ -9,6 +9,11 @@ async function getStations(): Promise<Stations> {
   return data
 }
 
+export async function getStation(id: string): Promise<Station | null> {
+  const stations = await getStations()
+  return stations[id] ?? null
+}
+
 export function createStation(
   goodsArr: [string, number][],
   inputSystem: string,

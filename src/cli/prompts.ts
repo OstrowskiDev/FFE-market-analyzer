@@ -4,6 +4,7 @@ import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
+import { getStation } from "../data/operations.js"
 
 export async function welcomeScreen() {
   const { commanderName } = loadSettings()
@@ -44,9 +45,13 @@ async function printOptions() {
     case "2": {
       clearScreen()
       renderHeader()
-      const stationA = await ask("\nID of first station: ")
-      const stationB = await ask("ID of second station: ")
-      compareStations(stationA, stationB)
+      const msgA = "\nID of first station: "
+      const msgB = "ID of second station: "
+      const msgRepeat =
+        "station ID does not exist, please enter station ID again: "
+      const stationAId = await promptForValidStationId(msgA, msgRepeat)
+      const stationBId = await promptForValidStationId(msgB, msgRepeat)
+      compareStations(stationAId, stationBId)
       await ask("Press enter to continue: ")
       break
     }
@@ -64,9 +69,13 @@ async function printOptions() {
     case "4": {
       clearScreen()
       renderHeader()
-      const stationA = await ask("\nID of first station: ")
-      const stationB = await ask("ID of second station: ")
-      compareStations(stationA, stationB, { illegal: true })
+      const msgA = "\nID of first station: "
+      const msgB = "ID of second station: "
+      const msgRepeat =
+        "station ID does not exist, please enter station ID again: "
+      const stationAId = await promptForValidStationId(msgA, msgRepeat)
+      const stationBId = await promptForValidStationId(msgB, msgRepeat)
+      compareStations(stationAId, stationBId, { illegal: true })
       await ask("Press enter to continue: ")
       break
     }
@@ -94,4 +103,15 @@ async function printOptions() {
   }
 
   printOptions()
+}
+
+async function promptForValidStationId(
+  firstMsg: string,
+  repeatMsg: string,
+): Promise<string> {
+  let stationID = await ask(firstMsg)
+  while (!(await getStation(stationID))) {
+    stationID = await ask(repeatMsg)
+  }
+  return stationID
 }
