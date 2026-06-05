@@ -24,13 +24,12 @@ function getStationStock(stationID: string): Goods {
   return station.goods
 }
 
-function getStationsBySystem(name: string): Station[] {
+export function getStationsBySystem(name: string): Station[] {
   const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations: Stations = JSON.parse(rawStations)
   const filtered = Object.values(stations).filter(
     (station) => station.system === name,
   )
-  if (!filtered.length) throw new Error(`Unknown system name: ${name}`)
   return filtered
 }
 
