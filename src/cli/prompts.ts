@@ -1,5 +1,9 @@
 import { rl } from "./rl.js"
-import { compareStations, compareSystems } from "../pipeline/analyzeData.js"
+import {
+  compareStations,
+  compareSystems,
+  getStationsBySystem,
+} from "../pipeline/analyzeData.js"
 import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
@@ -59,8 +63,12 @@ async function printOptions() {
     case "3": {
       clearScreen()
       renderHeader()
-      const systemA = await ask("\nName of first system: ")
-      const systemB = await ask("Name of second system: ")
+      const msgA = "\nName of first system: "
+      const msgB = "Name of second system: "
+      const msgRepeat =
+        "system does not exist, please enter system name again: "
+      const systemA = await promptForValidSystemName(msgA, msgRepeat)
+      const systemB = await promptForValidSystemName(msgB, msgRepeat)
       compareSystems(systemA, systemB)
       await ask("Press enter to continue: ")
       break
@@ -83,8 +91,12 @@ async function printOptions() {
     case "5": {
       clearScreen()
       renderHeader()
-      const systemA = await ask("\nName of first system: ")
-      const systemB = await ask("Name of second system: ")
+      const msgA = "\nName of first system: "
+      const msgB = "Name of second system: "
+      const msgRepeat =
+        "system does not exist, please enter system name again: "
+      const systemA = await promptForValidSystemName(msgA, msgRepeat)
+      const systemB = await promptForValidSystemName(msgB, msgRepeat)
       compareSystems(systemA, systemB, { illegal: true })
       await ask("Press enter to continue: ")
       break
@@ -114,4 +126,15 @@ async function promptForValidStationId(
     stationID = await ask(repeatMsg)
   }
   return stationID
+}
+
+async function promptForValidSystemName(
+  firstMsg: string,
+  repeatMsg: string,
+): Promise<string> {
+  let systemName = await ask(firstMsg)
+  while (getStationsBySystem(systemName).length === 0) {
+    systemName = await ask(repeatMsg)
+  }
+  return systemName
 }
