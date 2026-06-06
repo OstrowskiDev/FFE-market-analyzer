@@ -59,7 +59,7 @@ async function printOptions() {
       clearScreen()
       renderHeader()
 
-      if (!hasStations()) {
+      if (!hasStations(2)) {
         console.log(
           "No stations found in database. Add stations before using this function.",
         )
@@ -82,7 +82,7 @@ async function printOptions() {
       clearScreen()
       renderHeader()
 
-      if (!hasSystems()) {
+      if (!hasSystems(2)) {
         console.log(
           "No systems found in database. Add stations before using this function.",
         )
@@ -105,7 +105,7 @@ async function printOptions() {
       clearScreen()
       renderHeader()
 
-      if (!hasStations()) {
+      if (!hasStations(2)) {
         console.log(
           "No stations found in database. Add stations before using this function.",
         )
@@ -128,7 +128,7 @@ async function printOptions() {
       clearScreen()
       renderHeader()
 
-      if (!hasSystems()) {
+      if (!hasSystems(2)) {
         console.log(
           "No systems found in database. Add stations before using this function.",
         )

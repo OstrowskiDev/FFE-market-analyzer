@@ -15,15 +15,18 @@ export function getStation(id: string): Station | null {
   return stations[id] ?? null
 }
 
-export function hasStations(): boolean {
+export function hasStations(num: number = 1): boolean {
   const stations = getStations()
-  return Object.keys(stations).length > 0
+  return Object.keys(stations).length > num - 1
 }
 
-export function hasSystems(): boolean {
+export function hasSystems(num: number = 1): boolean {
   const stations = getStations()
-  const systemNames = Object.values(stations).map((station) => station.system)
-  return systemNames.length > 0
+  const rawSystemNames = Object.values(stations).map(
+    (station) => station.system,
+  )
+  const systemNames = [...new Set(rawSystemNames)]
+  return systemNames.length > num - 1
 }
 
 export function createStation(
