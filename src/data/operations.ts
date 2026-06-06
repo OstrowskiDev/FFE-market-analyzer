@@ -4,7 +4,7 @@ import { getSystemName, getStationName, getStationID } from "./utils.js"
 import { stationsPath, stationsTempPath } from "../config/paths.js"
 import type { Station, Stations } from "../types/index.js"
 
-function getStations(): Stations {
+export function getStations(): Stations {
   const raw = fs.readFileSync(stationsPath, "utf-8")
   const data = raw.trim() ? JSON.parse(raw) : {}
   return data
@@ -13,6 +13,11 @@ function getStations(): Stations {
 export function getStation(id: string): Station | null {
   const stations = getStations()
   return stations[id] ?? null
+}
+
+export function hasStations(): boolean {
+  const stations = getStations()
+  return Object.keys(stations).length > 0
 }
 
 export function createStation(

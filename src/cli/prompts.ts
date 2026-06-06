@@ -8,7 +8,8 @@ import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
-import { getStation } from "../data/operations.js"
+import { getStation, getStations, hasStations } from "../data/operations.js"
+import { printAllStationsIds } from "../pipeline/printData.js"
 
 export async function welcomeScreen() {
   const { commanderName } = loadSettings()
@@ -49,6 +50,15 @@ async function printOptions() {
     case "2": {
       clearScreen()
       renderHeader()
+
+      if (!hasStations()) {
+        console.log(
+          "No stations found in database. Add stations before using this function.",
+        )
+        break
+      }
+      printAllStationsIds()
+
       const msgA = "\nID of first station: "
       const msgB = "ID of second station: "
       const msgRepeat =
@@ -63,6 +73,7 @@ async function printOptions() {
     case "3": {
       clearScreen()
       renderHeader()
+
       const msgA = "\nName of first system: "
       const msgB = "Name of second system: "
       const msgRepeat =
@@ -77,6 +88,15 @@ async function printOptions() {
     case "4": {
       clearScreen()
       renderHeader()
+
+      if (!hasStations()) {
+        console.log(
+          "No stations found in database. Add stations before using this function.",
+        )
+        break
+      }
+      printAllStationsIds()
+
       const msgA = "\nID of first station: "
       const msgB = "ID of second station: "
       const msgRepeat =

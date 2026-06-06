@@ -11,6 +11,7 @@ import type {
   Station,
   TradeRoute,
 } from "../types/index.js"
+import { getStations } from "../data/operations.js"
 
 export function generateRouteMsg(
   diffs: DiffEntry[],
@@ -82,4 +83,24 @@ export function printStationData(station: Station): void {
   }
 
   console.log(`\n${footer}\n`)
+}
+
+export function printAllStationsIds(): void {
+  const stations = getStations()
+  const stationsIds = Object.keys(stations)
+  if (stationsIds.length === 0) {
+    console.log(
+      "No stations found in database. You need to add stations first to use this function.",
+    )
+    return
+  }
+  console.log("Printing all station IDs found in database: \n")
+  while (stationsIds.length > 0) {
+    console.log(
+      stationsIds
+        .splice(0, 4)
+        .map((id) => id.padEnd(20))
+        .join(""),
+    )
+  }
 }
