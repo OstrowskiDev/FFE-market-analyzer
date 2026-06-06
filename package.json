@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node build/src/main.js"
+    "start": "node build/src/main.js",
+    "build:run": "npm run build && npm run start"
   },
   "engines": {
     "node": "20.x"
