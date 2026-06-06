@@ -104,3 +104,26 @@ export function printAllStationsIds(): void {
     )
   }
 }
+
+export function printAllSystemsNames(): void {
+  const stations = getStations()
+  const rawSystemNames = Object.values(stations).map(
+    (station) => station.system,
+  )
+  const systemNames = [...new Set(rawSystemNames)]
+  if (systemNames.length === 0) {
+    console.log(
+      "No systems found in database. You need to add stations first to use this function.",
+    )
+    return
+  }
+  console.log("Printing all system names found in database: \n")
+  while (systemNames.length > 0) {
+    console.log(
+      systemNames
+        .splice(0, 4)
+        .map((systemName) => systemName.padEnd(20))
+        .join(""),
+    )
+  }
+}

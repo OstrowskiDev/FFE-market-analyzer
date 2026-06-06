@@ -20,6 +20,12 @@ export function hasStations(): boolean {
   return Object.keys(stations).length > 0
 }
 
+export function hasSystems(): boolean {
+  const stations = getStations()
+  const systemNames = Object.values(stations).map((station) => station.system)
+  return systemNames.length > 0
+}
+
 export function createStation(
   goodsArr: [string, number][],
   inputSystem: string,

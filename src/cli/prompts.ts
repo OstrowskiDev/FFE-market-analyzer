@@ -8,8 +8,16 @@ import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
-import { getStation, getStations, hasStations } from "../data/operations.js"
-import { printAllStationsIds } from "../pipeline/printData.js"
+import {
+  getStation,
+  getStations,
+  hasStations,
+  hasSystems,
+} from "../data/operations.js"
+import {
+  printAllStationsIds,
+  printAllSystemsNames,
+} from "../pipeline/printData.js"
 
 export async function welcomeScreen() {
   const { commanderName } = loadSettings()
@@ -62,7 +70,7 @@ async function printOptions() {
       const msgA = "\nID of first station: "
       const msgB = "ID of second station: "
       const msgRepeat =
-        "station ID does not exist, please enter station ID again: "
+        "Station ID does not exist, please enter station ID again: "
       const stationAId = await promptForValidStationId(msgA, msgRepeat)
       const stationBId = await promptForValidStationId(msgB, msgRepeat)
       compareStations(stationAId, stationBId)
@@ -74,10 +82,18 @@ async function printOptions() {
       clearScreen()
       renderHeader()
 
+      if (!hasSystems()) {
+        console.log(
+          "No systems found in database. Add stations before using this function.",
+        )
+        break
+      }
+      printAllSystemsNames()
+
       const msgA = "\nName of first system: "
       const msgB = "Name of second system: "
       const msgRepeat =
-        "system does not exist, please enter system name again: "
+        "System does not exist, please enter system name again: "
       const systemA = await promptForValidSystemName(msgA, msgRepeat)
       const systemB = await promptForValidSystemName(msgB, msgRepeat)
       compareSystems(systemA, systemB)
@@ -100,7 +116,7 @@ async function printOptions() {
       const msgA = "\nID of first station: "
       const msgB = "ID of second station: "
       const msgRepeat =
-        "station ID does not exist, please enter station ID again: "
+        "Station ID does not exist, please enter station ID again: "
       const stationAId = await promptForValidStationId(msgA, msgRepeat)
       const stationBId = await promptForValidStationId(msgB, msgRepeat)
       compareStations(stationAId, stationBId, { illegal: true })
@@ -111,10 +127,19 @@ async function printOptions() {
     case "5": {
       clearScreen()
       renderHeader()
+
+      if (!hasSystems()) {
+        console.log(
+          "No systems found in database. Add stations before using this function.",
+        )
+        break
+      }
+      printAllSystemsNames()
+
       const msgA = "\nName of first system: "
       const msgB = "Name of second system: "
       const msgRepeat =
-        "system does not exist, please enter system name again: "
+        "System does not exist, please enter system name again: "
       const systemA = await promptForValidSystemName(msgA, msgRepeat)
       const systemB = await promptForValidSystemName(msgB, msgRepeat)
       compareSystems(systemA, systemB, { illegal: true })
