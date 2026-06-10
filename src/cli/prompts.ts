@@ -8,12 +8,7 @@ import { scanStation } from "../pipeline/pipeline.js"
 import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
-import {
-  getStation,
-  getStations,
-  hasStations,
-  hasSystems,
-} from "../data/operations.js"
+import { getStation, hasStations, hasSystems } from "../data/operations.js"
 import {
   printAllStationsIds,
   printAllSystemsNames,

@@ -36,13 +36,12 @@ export function getStationsBySystem(name: string): Station[] {
 function getSystemDiffs(
   stationsA: Station[],
   stationsB: Station[],
+  options: { illegal: boolean } = { illegal: false },
 ): SystemDiff[] {
   const systemDiffs = []
   for (const stationA of stationsA) {
     for (const stationB of stationsB) {
-      //!!!! add options.illegal logic to calc prices:
-      const diffs = calcPrices(stationA.id, stationB.id)
-      //!!!! check if filterDiffs also needs options.illegal
+      const diffs = calcPrices(stationA.id, stationB.id, options)
       const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
       const highest = findHighestDiff(filteredDiffs)
       const lowest = findLowestDiff(filteredDiffs)
@@ -61,21 +60,14 @@ function getSystemDiffs(
   return systemDiffs
 }
 
-//!!!! decyzja: czy funkcja ma drukować legal/illegal czy both?
-//!!!! ważne: obecnie logika dla liczenia illegal routes nie istnieje wewnątrz tego body:
 export function compareSystems(
   nameA: string,
   nameB: string,
-  options = { illegal: false },
+  options: { illegal: boolean } = { illegal: false },
 ) {
   const stationsA = getStationsBySystem(nameA)
   const stationsB = getStationsBySystem(nameB)
-
-  // add logic for options.illegal here:
-
-  const systemDiffs = getSystemDiffs(stationsA, stationsB)
-
-  //pass systemDiffs from legal/illegal routes below:
+  const systemDiffs = getSystemDiffs(stationsA, stationsB, options)
   const bestRoute = findBestRoute(systemDiffs)
   printTradeRoute(bestRoute, options)
 }
@@ -109,15 +101,9 @@ export function compareStations(
   stationBId: string,
   options: { illegal: boolean } = { illegal: false },
 ): void {
-  if (!options.illegal) {
-    const diffs = calcPrices(stationAId, stationBId)
-    const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
-    generateRouteMsg(filteredDiffs, stationAId, stationBId, options)
-  } else {
-    const illegalDiffs = calcPrices(stationAId, stationBId, options)
-    const filteredIllDiffs = filterDiffs(illegalDiffs, settings.ignoredGoods)
-    generateRouteMsg(filteredIllDiffs, stationAId, stationBId, options)
-  }
+  const diffs = calcPrices(stationAId, stationBId, options)
+  const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
+  generateRouteMsg(filteredDiffs, stationAId, stationBId, options)
 }
 
 function calcPrices(
