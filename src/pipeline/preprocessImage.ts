@@ -1,5 +1,7 @@
+import path from "path"
 import { Jimp } from "jimp"
 import { logger } from "../cli/helpers.js"
+import { imagesPipelineDir } from "../config/paths.js"
 
 export async function preprocessImage(file: string): Promise<void> {
   const image = await Jimp.read(file)
@@ -9,7 +11,13 @@ export async function preprocessImage(file: string): Promise<void> {
 
   // FAZA 3 grayscale
   image.greyscale()
-  await image.write("debug_grayscale.png")
+
+  const dstGrayscalePath = path.join(
+    imagesPipelineDir,
+    "debug_grayscale.png",
+  ) as `${string}.${string}`
+
+  await image.write(dstGrayscalePath)
   logger("After grayscale")
   logger("Saved: debug_grayscale.png")
 
@@ -94,6 +102,11 @@ export async function preprocessImage(file: string): Promise<void> {
     `Blacked out Credits sign: ${CREDITS_START}-${CREDITS_END} (x=${creditsX1}-${creditsX2})`,
   )
 
-  await image.write("debug_threshold.png")
+  const dstThresholdPath = path.join(
+    imagesPipelineDir,
+    "debug_threshold.png",
+  ) as `${string}.${string}`
+
+  await image.write(dstThresholdPath)
   logger("Saved: debug_threshold.png")
 }

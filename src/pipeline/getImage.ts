@@ -1,10 +1,10 @@
 import fs from "fs"
-import { projectRoot, imagesDir } from "../config/paths.js"
+import path from "path"
+import { imagesPipelineDir } from "../config/paths.js"
 
 export function getImages(): string[] {
   const imagesNum = 3
-  //!!!! implement imagesDir instead of projectRoot
-  const fileNames = fs.readdirSync(projectRoot)
+  const fileNames = fs.readdirSync(imagesPipelineDir)
 
   const images = fileNames.filter(
     (file) =>
@@ -17,7 +17,12 @@ export function getImages(): string[] {
     process.exit(0)
   }
 
-  images.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)
+  images.sort(
+    (a, b) =>
+      fs.statSync(path.join(imagesPipelineDir, b)).mtimeMs -
+      fs.statSync(path.join(imagesPipelineDir, a)).mtimeMs,
+  )
+
   const latest = images.slice(0, imagesNum).reverse()
-  return latest
+  return latest.map((file) => path.join(imagesPipelineDir, file))
 }
