@@ -16,7 +16,7 @@ pnpm-debug.log*
 
 # build output
 dist/
-build/
+/build/
 .next/
 out/
 

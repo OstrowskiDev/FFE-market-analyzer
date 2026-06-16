@@ -6,7 +6,7 @@
   "main": "build/src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc && node scripts/build/postbuild.js",
     "start": "node build/src/main.js",
     "build:run": "npm run build && npm run start"
   },
