@@ -1,10 +1,9 @@
 import path from "path"
 import { fileURLToPath } from "url"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const projectRoot = path.resolve(__dirname, "../../")
+const projectRoot = (process as any).pkg
+  ? path.dirname(process.execPath) // prod
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../") // dev
 
 const localDbDir = path.join(projectRoot, "localdb")
 const imagesPlaceholderDir = path.join(projectRoot, "img/placeholder")
