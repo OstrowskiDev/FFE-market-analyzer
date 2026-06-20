@@ -8,6 +8,7 @@ const projectRoot = (process as any).pkg
 const localDbDir = path.join(projectRoot, "localdb")
 const imagesPlaceholderDir = path.join(projectRoot, "img/placeholder")
 const imagesPipelineDir = path.join(projectRoot, "img/pipeline")
+const screenshotDir = path.resolve(projectRoot, "..", "capture")
 
 const settingsPath = path.join(projectRoot, "settings.json")
 const stationsPath = path.join(localDbDir, "stations.json")
@@ -18,6 +19,7 @@ export {
   localDbDir,
   imagesPlaceholderDir,
   imagesPipelineDir,
+  screenshotDir,
   settingsPath,
   stationsPath,
   stationsTempPath,
