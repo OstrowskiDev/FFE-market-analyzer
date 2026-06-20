@@ -7,6 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && node scripts/build/postbuild.js",
+    "bundle": "node scripts/build/bundle.js",
+    "build:standalone": "npm run build && npm run bundle",
     "start": "node build/src/main.js",
     "build:run": "npm run build && npm run start"
   },
