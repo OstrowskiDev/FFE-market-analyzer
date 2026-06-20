@@ -1,11 +1,9 @@
 import fs from "fs"
 import path from "path"
-import { loadSettings } from "../data/settingsIO.js"
-import { imagesPipelineDir } from "../config/paths.js"
+import { imagesPipelineDir, screenshotDir } from "../config/paths.js"
 
 export function getFilesFromDosbox(): void {
-  const settings = loadSettings()
-  const srcDir = settings.screenshotDir
+  const srcDir = screenshotDir
   const dstDir = imagesPipelineDir
 
   const count = 3
