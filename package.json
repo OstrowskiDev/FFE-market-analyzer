@@ -10,7 +10,16 @@
     "bundle": "node scripts/build/bundle.js",
     "build:standalone": "npm run build && npm run bundle",
     "start": "node build/src/main.js",
-    "build:run": "npm run build && npm run start"
+    "build:run": "npm run build && npm run start",
+    "package": "pkg dist/bundle.cjs --compress GZip --output dist/FFE-market-analyzer.exe",
+    "build:release": "npm run build && npm run bundle && npm run package"
+  },
+  "pkg": {
+    "targets": [
+      "node20-win-x64",
+      "node20-linux-x64"
+    ],
+    "outputPath": "dist"
   },
   "engines": {
     "node": "20.x"
