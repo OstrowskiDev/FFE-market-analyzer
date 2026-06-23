@@ -11,10 +11,12 @@
     "build:standalone": "npm run build && npm run bundle",
     "start": "node build/src/main.js",
     "build:run": "npm run build && npm run start",
-    "package:win": "pkg dist/bundle.cjs --targets node20-win-x64 --output dist/FFE-market-analyzer-win.exe",
-    "package:linux": "pkg dist/bundle.cjs --targets node20-linux-x64 --output dist/FFE-market-analyzer-linux",
+    "package:win": "pkg dist/bundle.cjs --targets node20-win-x64 --output dist/FFE-market-analyzer-win-x64/FFE-market-analyzer.exe",
+    "package:linux": "pkg dist/bundle.cjs --targets node20-linux-x64 --output dist/FFE-market-analyzer-linux-x64/FFE-market-analyzer",
     "assemble:dist": "node scripts/build/assemble-dist.js",
-    "build:release": "npm run build && npm run bundle && npm run package:win && npm run package:linux && npm run assemble:dist"
+    "clean:bundle": "node -e \"require('fs').rmSync('dist/bundle.cjs', {force: true})\"",
+    "archive": "node scripts/build/archive.js",
+    "build:release": "npm run build && npm run bundle && npm run package:win && npm run package:linux && npm run assemble:dist && npm run clean:bundle && npm run archive"
   },
   "engines": {
     "node": "20.x"
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@types/node": "^25.9.1",
     "@yao-pkg/pkg": "^6.14.2",
+    "archiver": "^8.0.0",
     "esbuild": "^0.28.1",
     "knip": "^6.14.2",
     "typescript": "^6.0.3"
