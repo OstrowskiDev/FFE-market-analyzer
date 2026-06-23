@@ -71,11 +71,16 @@ export async function preprocessImage(file: string): Promise<void> {
     }
   }
 
-  const padding = 10
-  minX = Math.max(0, minX - padding)
-  maxX = Math.min(width - 1, maxX + padding)
-  minY = Math.max(0, minY - padding)
-  maxY = Math.min(height - 1, maxY + padding)
+  const newWidth = maxX - minX
+  const newHeight = maxY - minY
+
+  const paddingX = Math.ceil(newWidth * 0.019)
+  const paddingY = Math.ceil(newHeight * 0.013)
+
+  minX = Math.max(0, minX - paddingX)
+  maxX = Math.min(width - 1, maxX + paddingX)
+  minY = Math.max(0, minY - paddingY)
+  maxY = Math.min(height - 1, maxY + paddingY)
 
   logger(`Bounding box: x=${minX}-${maxX}, y=${minY}-${maxY}`)
   logger(`Content size: ${maxX - minX} x ${maxY - minY} px`)
