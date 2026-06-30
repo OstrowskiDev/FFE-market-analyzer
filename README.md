@@ -17,6 +17,7 @@ Take screenshots of any station's stockmarket during your playthrough. FFE Marke
 - [Limitations](#limitations)
 - [How It Works](#how-it-works)
 - [Macro](#macro)
+- [Taking Your Own Screenshots](#taking-your-own-screenshots)
 - [Reporting Issues](#reporting-issues)
 
 ## Requirements
@@ -47,17 +48,18 @@ Take screenshots of any station's stockmarket during your playthrough. FFE Marke
 
    > **Windows:** Avoid installing DOSBox-X in system directories (e.g. `C:\Program Files`). This can cause permission issues when the tool reads from `capture/`.
 
-3. _(Optional)_ Assign the macro to a keyboard shortcut for faster screenshotting. See [Macro](#macro).
-   - **Linux:** `miniMacro.sh`
-   - **Windows:** _(coming soon)_
+3. _(Linux only, optional)_ `linuxMacro.sh` is a convenience script that automates the in-game screenshot sequence. See [Macro](#macro) for setup and usage.
 
 ## Usage
 
 ### Scanning a station
 
 1. In the game, navigate to any station and open the **Stockmarket**.
-2. Take **exactly 3 screenshots** with DOSBox-X (`F12+p`), making sure they collectively cover the station's full commodity list.
-   _(Tip: use the [macro](#macro) to automate this step.)_
+2. Take **3 screenshots** using DOSBox-X (`F12+p`) that collectively cover the station's full commodity list. Scroll through the stockmarket between shots — overlapping entries are handled automatically. Some versions of DOSBox-X use a different shortcut; check your key bindings if `F12+p` doesn't work.
+
+   _(Linux users: `linuxMacro.sh` automates the full sequence. See [Macro](#macro).)_
+   _(Prefer your own screenshot tool? See [Taking Your Own Screenshots](#taking-your-own-screenshots).)_
+
 3. Launch `FFE-market-analyzer` and select **Add stations data** (option 1).
 4. Enter the station's **star system name** and **station name** when prompted.
 
@@ -120,7 +122,7 @@ It has two core functions: **data collection** and **trade route analysis**.
 4. Parses and cleans the API response, including correction of common OCR misreads caused by FFE's font (e.g. `7` read as `1`).
 5. Saves the commodity data to `localdb/stations.json`.
 
-Screenshots must be taken with DOSBox-X (`F12+p`) — this guarantees a consistent image format that the preprocessing pipeline is calibrated for.
+Screenshots must contain only the game output — no window frames or system taskbar. DOSBox-X's built-in screen capture (`F12+p`) ensures this automatically.
 
 ### Trade route analysis
 
@@ -130,9 +132,9 @@ Using the data stored in `stations.json`, the tool compares buy and sell prices 
 
 ## Macro
 
-_(Windows macro coming soon.)_
+> **Linux only.** `linuxMacro.sh` is an optional convenience script included as a bonus for Linux users. There is no Windows equivalent.
 
-`miniMacro.sh` automates the DOSBox-X screenshot sequence: it releases the mouse capture (`Ctrl+F10`), fires the DOSBox-X screenshot shortcut (`F12+p`), then re-captures the mouse — all in a single keypress, without interrupting your session.
+`linuxMacro.sh` automates the full 3-screenshot sequence for a station visit. It releases the mouse capture (`Ctrl+F10`), takes a screenshot, clicks the stockmarket down arrow a set number of times to scroll the list, then repeats — covering the full commodity list in a single run, without interrupting your session.
 
 ### Requirements
 
@@ -142,11 +144,23 @@ The macro uses [`ydotool`](https://github.com/ReimuNotMoe/ydotool). Install it v
 
 1. Make the script executable:
    ```bash
-   chmod +x /path/to/FFE-market-analyzer/miniMacro.sh
+   chmod +x /path/to/FFE-market-analyzer/linuxMacro.sh
    ```
-2. Assign it to a keyboard shortcut in your desktop environment settings.
+2. Assign it to a keyboard shortcut in your desktop environment. How to do this depends on your desktop environment — refer to its documentation.
 
-When triggered, the macro takes one screenshot. Run it 3 times per station visit to cover the full commodity list.
+### Usage
+
+1. In the game, navigate to the station's **Stockmarket**.
+2. Hover the in-game mouse cursor over the stockmarket's **down arrow**. Do not click.
+3. Trigger the macro using your assigned keyboard shortcut.
+4. Wait for DOSBox-X to take all 3 screenshots. **Do not move the mouse while the macro is running** — it clicks the down arrow at the cursor's position to scroll the list, so any movement will cause it to miss.
+
+## Taking Your Own Screenshots
+
+If you prefer not to use DOSBox-X's screen capture, you can provide your own screenshots instead. Place them directly in `dosbox-x/capture/` before running the scan.
+
+- The screenshots must contain **only the game output** — no DOSBox-X window frame, title bar, or system taskbar. Crop to the game area only; any surrounding content will cause the preprocessing pipeline to fail or produce incorrect results.
+- You still need 3 screenshots per station that collectively cover the full stockmarket list. Overlapping entries are fine.
 
 ## Reporting Issues
 
