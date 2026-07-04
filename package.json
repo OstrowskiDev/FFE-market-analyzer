@@ -1,7 +1,7 @@
 {
   "name": "project-47-ffe-market-analyzer",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.0.0-test",
   "description": "FFE market analyzer tool",
   "main": "build/src/main.js",
   "scripts": {
