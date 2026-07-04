@@ -27,3 +27,13 @@ await zipDir(
   "dist/FFE-market-analyzer-linux-x64",
   "dist/FFE-market-analyzer-linux-x64.zip",
 )
+
+await zipDir(
+  "dist/FFE-market-analyzer-win-x64-demo",
+  "dist/FFE-market-analyzer-win-x64-demo.zip",
+)
+
+await zipDir(
+  "dist/FFE-market-analyzer-linux-x64-demo",
+  "dist/FFE-market-analyzer-linux-x64-demo.zip",
+)

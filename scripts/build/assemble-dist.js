@@ -10,7 +10,7 @@ const distDir = path.join(projectRoot, "dist")
 assembleDist("FFE-market-analyzer-win-x64")
 assembleDist("FFE-market-analyzer-linux-x64")
 
-function assembleDist(subDir) {
+export function assembleDist(subDir) {
   const finalDir = path.join(distDir, subDir)
 
   console.log(`\nassemble-dist/${subDir}: copying assets to dist/${subDir}\n`)
