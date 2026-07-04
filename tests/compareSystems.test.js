@@ -1,4 +1,4 @@
 import { compareSystems } from "../pipeline/analyzeData.js"
 
-compareSystems("Sol", "Bernard Star")
-compareSystems("Sol", "Gateway")
+await compareSystems("Sol", "Bernard Star")
+await compareSystems("Sol", "Gateway")

@@ -60,7 +60,7 @@ function getSystemDiffs(
   return systemDiffs
 }
 
-export function compareSystems(
+export async function compareSystems(
   nameA: string,
   nameB: string,
   options: { illegal: boolean } = { illegal: false },
@@ -69,7 +69,7 @@ export function compareSystems(
   const stationsB = getStationsBySystem(nameB)
   const systemDiffs = getSystemDiffs(stationsA, stationsB, options)
   const bestRoute = findBestRoute(systemDiffs)
-  printTradeRoute(bestRoute, options)
+  await printTradeRoute(bestRoute, options)
 }
 
 function findBestRoute(systemDiffs: SystemDiff[]): BestRoute {
@@ -96,14 +96,14 @@ function findBestRoute(systemDiffs: SystemDiff[]): BestRoute {
   return bestRoute
 }
 
-export function compareStations(
+export async function compareStations(
   stationAId: string,
   stationBId: string,
   options: { illegal: boolean } = { illegal: false },
-): void {
+): Promise<void> {
   const diffs = calcPrices(stationAId, stationBId, options)
   const filteredDiffs = filterDiffs(diffs, settings.ignoredGoods)
-  generateRouteMsg(filteredDiffs, stationAId, stationBId, options)
+  await generateRouteMsg(filteredDiffs, stationAId, stationBId, options)
 }
 
 function calcPrices(

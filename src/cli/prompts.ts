@@ -68,7 +68,7 @@ async function printOptions() {
         "Station ID does not exist, please enter station ID again: "
       const stationAId = await promptForValidStationId(msgA, msgRepeat)
       const stationBId = await promptForValidStationId(msgB, msgRepeat)
-      compareStations(stationAId, stationBId)
+      await compareStations(stationAId, stationBId)
       await ask("Press enter to continue: ")
       break
     }
@@ -91,7 +91,7 @@ async function printOptions() {
         "System does not exist, please enter system name again: "
       const systemA = await promptForValidSystemName(msgA, msgRepeat)
       const systemB = await promptForValidSystemName(msgB, msgRepeat)
-      compareSystems(systemA, systemB)
+      await compareSystems(systemA, systemB)
       await ask("Press enter to continue: ")
       break
     }
@@ -114,7 +114,7 @@ async function printOptions() {
         "Station ID does not exist, please enter station ID again: "
       const stationAId = await promptForValidStationId(msgA, msgRepeat)
       const stationBId = await promptForValidStationId(msgB, msgRepeat)
-      compareStations(stationAId, stationBId, { illegal: true })
+      await compareStations(stationAId, stationBId, { illegal: true })
       await ask("Press enter to continue: ")
       break
     }
@@ -137,7 +137,7 @@ async function printOptions() {
         "System does not exist, please enter system name again: "
       const systemA = await promptForValidSystemName(msgA, msgRepeat)
       const systemB = await promptForValidSystemName(msgB, msgRepeat)
-      compareSystems(systemA, systemB, { illegal: true })
+      await compareSystems(systemA, systemB, { illegal: true })
       await ask("Press enter to continue: ")
       break
     }

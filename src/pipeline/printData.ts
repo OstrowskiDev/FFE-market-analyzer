@@ -12,13 +12,14 @@ import type {
   TradeRoute,
 } from "../types/index.js"
 import { getStations } from "../data/operations.js"
+import { clearScreen, progressBarWrapper } from "../cli/ui.js"
 
-export function generateRouteMsg(
+export async function generateRouteMsg(
   diffs: DiffEntry[],
   currentStationID: string,
   targetStationID: string,
   options: RouteOptions = { illegal: false },
-): void {
+): Promise<void> {
   const rawStations = fs.readFileSync(stationsPath, "utf-8")
   const stations = JSON.parse(rawStations)
 
@@ -37,32 +38,32 @@ export function generateRouteMsg(
     bestSell,
   }
 
-  printTradeRoute(route, options)
+  await printTradeRoute(route, options)
 }
 
-export function printTradeRoute(
+export async function printTradeRoute(
   route: TradeRoute,
   options: RouteOptions = { illegal: false },
-): void {
+): Promise<void> {
   const isIllegal = options.illegal
   const { stationNameA, stationNameB, systemA, systemB, bestBuy, bestSell } =
     route
 
-  console.log(
-    `\n======= COMPUTED ${isIllegal ? "ILLEGAL" : ""} TRADE ROUTE =========`,
-  )
+  const header = `\n======= COMPUTED ${isIllegal ? "ILLEGAL" : ""} TRADE ROUTE =========`
+  const footer = `n=======================================${isIllegal ? "=======" : ""}\n`
 
+  clearScreen()
+  console.log(header)
+  await progressBarWrapper(400)
+
+  clearScreen()
+  console.log(header)
   console.log(`${stationNameA} (${systemA}) → ${stationNameB} (${systemB})\n`)
-
   console.log(`BUY @ ${stationNameA} → SELL @ ${stationNameB}`)
   formatGoodsList(bestBuy)
-
   console.log(`\nBUY @ ${stationNameB} → SELL @ ${stationNameA}`)
   formatGoodsList(bestSell, true)
-
-  console.log(
-    `\n=======================================${isIllegal ? "=======" : ""}\n`,
-  )
+  console.log(footer)
 }
 
 export function printStationData(station: Station): void {
