@@ -80,7 +80,7 @@ export function printStationData(station: Station): void {
   const maxPriceLen = Math.max(...formatted.map(([, p]) => p.length))
 
   for (const [name, price] of formatted) {
-    console.log(`  ${name.padEnd(18)} +${price.padStart(maxPriceLen)}¢`)
+    console.log(`  ${name.padEnd(18)} ${price.padStart(maxPriceLen)}¢`)
   }
 
   console.log(`\n${footer}\n`)
