@@ -8,6 +8,14 @@ A standalone CLI companion for _Frontier: First Encounters_ (1995).
 
 Take screenshots of any station's stockmarket during your playthrough. FFE Market Analyzer reads the price data from those images, builds up a local database across your visited stations, and finds the best trade routes — showing you the most profitable buy/sell opportunities between two stations or two star systems.
 
+## Demo version
+
+A prebuilt Demo version is available for quick evaluation and portfolio/recruiter review.
+
+It allows you to test the application without installing DOSBox-X or _Frontier: First Encounters_.
+
+More information on how to use and download [demo version here](#demo)
+
 ## Table of Contents
 
 - [Requirements](#requirements)
@@ -17,6 +25,7 @@ Take screenshots of any station's stockmarket during your playthrough. FFE Marke
 - [Limitations](#limitations)
 - [How It Works](#how-it-works)
 - [Macro](#macro)
+- [Demo](#demo)
 - [Taking Your Own Screenshots](#taking-your-own-screenshots)
 - [Reporting Issues](#reporting-issues)
 
@@ -24,14 +33,14 @@ Take screenshots of any station's stockmarket during your playthrough. FFE Marke
 
 - Windows 10 or Linux (64-bit)
 - [DOSBox-X](https://dosbox-x.com/)
-- Frontier: First Encounters
+- [Frontier: First Encounters](https://www.frontierastro.co.uk/getting/getting.html)
 - Internet connection (required for station scanning)
 
 ## Installation
 
-1. Download the archive for your platform from the [Releases page](https://github.com/OstrowskiDev/FFE-market-analyzer/releases):
-   - **Windows 10 (64-bit):** [FFE-market-analyzer-win-x64.zip](PLACEHOLDER_WIN64)
-   - **Linux (64-bit):** [FFE-market-analyzer-linux-x64.zip](PLACEHOLDER_LINUX64)
+1. Download the archive for your platform from the Releases page:
+   - **Windows 10 (64-bit):** [FFE-market-analyzer-win-x64.zip](https://github.com/OstrowskiDev/FFE-market-analyzer/releases/latest/download/FFE-market-analyzer-win-x64.zip)
+   - **Linux (64-bit):** [FFE-market-analyzer-linux-x64.zip](https://github.com/OstrowskiDev/FFE-market-analyzer/releases/latest/download/FFE-market-analyzer-linux-x64.zip)
 
 2. Extract the archive into the **root folder of your DOSBox-X installation** — the same directory level as `capture/`:
 
@@ -161,6 +170,44 @@ If you prefer not to use DOSBox-X's screen capture, you can provide your own scr
 
 - The screenshots must contain **only the game output** — no DOSBox-X window frame, title bar, or system taskbar. Crop to the game area only; any surrounding content will cause the preprocessing pipeline to fail or produce incorrect results.
 - You still need 3 screenshots per station that collectively cover the full stockmarket list. Overlapping entries are fine.
+
+## Demo
+
+The Demo version is intended for quick testing, presentations, and portfolio/recruiter review.
+
+It does not require DOSBox-X or _Frontier: First Encounters_ to run.
+
+### Installation
+
+- Download demo release for your platform:
+  - **Windows 10 (64-bit):** [FFE-market-analyzer-win-x64-demo.zip](https://github.com/OstrowskiDev/FFE-market-analyzer/releases/latest/download/FFE-market-analyzer-win-x64-demo.zip)
+  - **Linux (64-bit):** [FFE-market-analyzer-linux-x64-demo.zip](https://github.com/OstrowskiDev/FFE-market-analyzer/releases/latest/download/FFE-market-analyzer-linux-x64-demo.zip)
+
+- Extract the `.zip` file anywhere on your system
+  - On Windows: avoid protected system directories (e.g. `Program Files`)
+- Run:
+  - Windows: `FFE-Market-Analyzer.exe`
+  - Linux: executable binary from terminal or file manager
+
+### Included demo data
+
+The Demo version includes preconfigured sample data:
+
+- Two sets of screenshots located in `capture/`
+  - These allow immediate use of the "add stations data (OCR pipeline)" feature without taking in-game screenshots
+  - After scanning the first station, manually delete the first three `.png` files in `capture/` to allow scanning of the next station set
+
+- Built-in dataset of multiple in-game stations
+  - Enables "find best trade route" functionality without the need to collect station data first
+
+### Purpose of the Demo version
+
+The Demo build is designed to:
+
+- Allow recruiters and gamers to quickly experience and test the application
+- Demonstrate application without the need of setting up DOSBox-X + FFE
+
+For normal gaming use download standard version and follow installation instructions provided in this readme.
 
 ## Reporting Issues
 
