@@ -125,6 +125,15 @@ It has two core functions: **data collection** and **trade route analysis**.
 
 ### Data collection
 
+<table>
+<tr>
+<td width="12"></td>
+<td>
+<img src="docs/gifs/station-data.gif" width="700" alt="Station data collection demo">
+</td>
+</tr>
+</table>
+
 1. Copies the 3 most recent screenshots from `dosbox-x/capture/`.
 2. Preprocesses the images to reduce noise and improve OCR accuracy.
 3. Sends each image to the [OCR.space](https://ocr.space/) API (public free tier), which converts the image to text.
@@ -134,6 +143,15 @@ It has two core functions: **data collection** and **trade route analysis**.
 Screenshots must contain only the game output — no window frames or system taskbar. DOSBox-X's built-in screen capture (`F12+p`) ensures this automatically.
 
 ### Trade route analysis
+
+<table>
+<tr>
+<td width="12"></td>
+<td>
+<img src="docs/gifs/best-trade.gif" width="700" alt="Trade route analysis demo">
+</td>
+</tr>
+</table>
 
 Using the data stored in `stations.json`, the tool compares buy and sell prices across two selected stations or star systems and returns the 4 most profitable buy/sell opportunities. Legal and illegal goods can be searched separately.
 
