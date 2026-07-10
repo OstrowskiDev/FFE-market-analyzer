@@ -21,7 +21,11 @@ export function copyFile(src, dest) {
 
 export function copyDir(src, dest) {
   ensureDir(dest)
-  fs.cpSync(src, dest, { recursive: true, force: true })
+  fs.cpSync(src, dest, {
+    recursive: true,
+    force: true,
+    preserveTimestamps: true,
+  })
   console.log(
     `  copied  ${path.relative(projectRoot, src)}/ → ${path.relative(projectRoot, dest)}/`,
   )
