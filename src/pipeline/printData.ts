@@ -67,6 +67,7 @@ export async function printTradeRoute(
 }
 
 export function printStationData(station: Station): void {
+  clearScreen()
   const header = `========= ${station.name.toUpperCase()} (${station.system}) ===========`
   const footer = "=".repeat(header.length - 1)
 

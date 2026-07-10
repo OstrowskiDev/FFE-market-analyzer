@@ -7,6 +7,7 @@ import { filterGoods } from "./analyzeData.js"
 import { blacklist } from "../data/dictionary.js"
 import { getFilesFromDosbox } from "./getFilesFromDosbox.js"
 import { printStationData } from "./printData.js"
+import { wait } from "../cli/ui.js"
 import {
   correctPriceRanges,
   correctCharMissMatch,
@@ -34,5 +35,6 @@ export async function scanStation(system: string, name: string): Promise<void> {
   const allGoods = ocrDataArr.flat()
   const stationObj = createStation(allGoods, system, name)
   await saveStation(stationObj)
+  await wait(500)
   printStationData(stationObj)
 }

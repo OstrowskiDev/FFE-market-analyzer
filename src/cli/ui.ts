@@ -64,3 +64,9 @@ export function typeTextWrapper(text: string, speed = 20): Promise<void> {
   }
   return typeText(text, speed)
 }
+
+export function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
