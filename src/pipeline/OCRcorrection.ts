@@ -20,26 +20,31 @@ export function correctCharMissMatch(goods: OcrRawGods): OcrRawGods {
 }
 
 export function correctPriceRanges(goods: OcrRawGods): OcrRawGods {
+  // 3-digit prices: position 0 fix (7 misread as 1)
+  // prettier-ignore
+  goods = correctGoodsPrices(goods, ["Robots", "Liquor", "Medicines"], 0, "1", "7")
+  // 4-digit prices: position 1 fix (7 misread as 1)
+  goods = correctGoodsPrices(goods, ["Precious Metals"], 1, "1", "7")
+  return goods
+}
+
+function correctGoodsPrices(
+  goods: OcrRawGods,
+  goodsToCorrect: string[],
+  position: number,
+  a: string,
+  b: string,
+): OcrRawGods {
   return goods.map(([name, price]) => {
-    if (!goodsPricesToCorrect.includes(name)) return [name, price]
-    if (/^\D/.test(price)) {
-      console.log(
-        `correctPriceRanges: expected leading digit but got "${price[0]}", name: ${name}, price: ${price}`,
-      )
-      return [name, price]
-    }
-    return [name, correctLeadingDigit("1", "7", price)]
+    if (!goodsToCorrect.includes(name)) return [name, price]
+    return [name, correctDigit(position, a, b, price)]
   })
 }
 
-// a, b has to be string type
-function correctLeadingDigit(a: string, b: string, string: string) {
-  if (string[0] === a) return string.replace(a, b)
-  return string
+function correctDigit(n: number, a: string, b: string, str: string) {
+  if (str[n] === a) return str.slice(0, n) + b + str.slice(n + 1)
+  return str
 }
-
-// lista goods w których cenach OCR często błędnie identyfikuje 7 -> 1, bezpieczne do nadpisania przy pierwszej cyfrze bo nigdy nie mogą mieć wartości 1:
-const goodsPricesToCorrect = ["Robots", "Liquor", "Medicines"]
 
 export function changePriceToNum(goods: OcrRawGods): OcrParsedGoods {
   return goods.map(([name, price]) => {
