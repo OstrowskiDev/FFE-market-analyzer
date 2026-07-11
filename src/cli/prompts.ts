@@ -44,7 +44,10 @@ async function printOptions() {
 
   await typeTextWrapper("\n6. Exit", 10)
 
-  await typeTextWrapper("\n(Type 'back' to return to this menu)", 5)
+  await typeTextWrapper(
+    "\n\x1b[90m(Type 'back' to return to this menu)\x1b[0m",
+    5,
+  )
 
   const choice = await ask("\nChoose option: ")
 
