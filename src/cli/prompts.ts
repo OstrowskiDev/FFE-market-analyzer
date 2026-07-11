@@ -5,7 +5,12 @@ import {
   getStationsBySystem,
 } from "../pipeline/analyzeData.js"
 import { scanStation } from "../pipeline/pipeline.js"
-import { typeTextWrapper, clearScreen, renderHeader } from "./ui.js"
+import {
+  typeTextWrapper,
+  clearScreen,
+  renderHeader,
+  printDbStats,
+} from "./ui.js"
 import { loadSettings } from "../data/settingsIO.js"
 import { ask } from "./helpers.js"
 import { getStation, hasStations, hasSystems } from "../data/operations.js"
@@ -27,6 +32,7 @@ export async function welcomeScreen() {
 async function printOptions() {
   clearScreen()
   renderHeader()
+  await printDbStats()
 
   await typeTextWrapper("\n1. Add stations data (OCR pipeline)", 10)
 

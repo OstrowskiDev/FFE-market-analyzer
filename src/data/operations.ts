@@ -70,3 +70,23 @@ export function sortGoods(goods: Goods) {
   }
   return sortedGoods
 }
+
+export function countSystems(): number {
+  const stationsDb = getStations()
+  const stationsArr = Object.values(stationsDb)
+  const systems = new Set()
+
+  for (const station of stationsArr) {
+    systems.add(station.system)
+  }
+
+  const systemsNo = systems.size
+  return systemsNo
+}
+
+export function countStations(): number {
+  const stationsDb = getStations()
+  const stationsArr = Object.entries(stationsDb)
+  const stationsNum = stationsArr.length
+  return stationsNum
+}
