@@ -1,7 +1,7 @@
 {
   "name": "ffe-market-analyzer",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "FFE market analyzer tool",
   "main": "build/src/main.js",
   "scripts": {
@@ -13,11 +13,12 @@
     "build:run": "npm run build && npm run start",
     "package:win": "pkg dist/bundle.cjs --targets node20-win-x64 --output dist/FFE-market-analyzer-win-x64/FFE-market-analyzer.exe",
     "package:linux": "pkg dist/bundle.cjs --targets node20-linux-x64 --output dist/FFE-market-analyzer-linux-x64/FFE-market-analyzer",
+    "clean:build": "node scripts/build/clean-build.js",
     "assemble:dist": "node scripts/build/assemble-dist.js",
     "assemble:demo": "node scripts/build/assemble-dist-demo.js",
     "clean:bundle": "node -e \"require('fs').rmSync('dist/bundle.cjs', {force: true})\"",
     "archive": "node scripts/build/archive.js",
-    "build:release": "npm run build && npm run bundle && npm run package:win && npm run package:linux && npm run assemble:dist && npm run assemble:demo && npm run clean:bundle && npm run archive"
+    "build:release": "node scripts/build/build-release.js"
   },
   "engines": {
     "node": "20.x"

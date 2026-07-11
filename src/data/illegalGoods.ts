@@ -6,4 +6,7 @@ export const illegalGoods = {
   "Hand Weapons": 980,
   "Battle Weapons": 1180,
   "Nerve Gas": 1550,
+  "Animal Meat": 250,
+  "Liquor": 700,
+  "Luxury Goods": 2500,
 }

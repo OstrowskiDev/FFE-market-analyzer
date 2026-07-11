@@ -1,3 +1,4 @@
+import { countStations, countSystems } from "../data/operations.js"
 import { loadSettings } from "../data/settingsIO.js"
 
 const settings = loadSettings()
@@ -63,4 +64,23 @@ export function typeTextWrapper(text: string, speed = 20): Promise<void> {
     return Promise.resolve()
   }
   return typeText(text, speed)
+}
+
+export function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+export async function printDbStats(): Promise<void> {
+  const systemsCount = countSystems()
+  const stationsCount = countStations()
+  await typeTextWrapper(
+    `\x1b[90m Systems scanned:`.padEnd(24, " ") + `${systemsCount}\x1b[0m`,
+    5,
+  )
+  await typeTextWrapper(
+    `\x1b[90m Stations scanned:`.padEnd(24, " ") + `${stationsCount}\x1b[0m`,
+    5,
+  )
 }
