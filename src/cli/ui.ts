@@ -76,11 +76,11 @@ export async function printDbStats(): Promise<void> {
   const systemsCount = countSystems()
   const stationsCount = countStations()
   await typeTextWrapper(
-    `\x1b[90m Systems scanned:`.padEnd(20, " ") + `${systemsCount}\x1b[0m`,
+    `\x1b[90m Systems scanned:`.padEnd(24, " ") + `${systemsCount}\x1b[0m`,
     5,
   )
   await typeTextWrapper(
-    `\x1b[90m Stations scanned:`.padEnd(20, " ") + `${stationsCount}\x1b[0m`,
+    `\x1b[90m Stations scanned:`.padEnd(24, " ") + `${stationsCount}\x1b[0m`,
     5,
   )
 }
