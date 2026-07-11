@@ -2,7 +2,8 @@ import fs from "fs"
 import fsp from "fs/promises"
 import { getSystemName, getStationName, getStationID } from "./utils.js"
 import { stationsPath, stationsTempPath } from "../config/paths.js"
-import type { Station, Stations } from "../types/index.js"
+import type { Goods, Station, Stations } from "../types/index.js"
+import { goodsOrder } from "./dictionary.js"
 
 export function getStations(): Stations {
   const raw = fs.readFileSync(stationsPath, "utf-8")
@@ -34,7 +35,8 @@ export function createStation(
   inputSystem: string,
   inputStName: string,
 ): Station {
-  const goods = Object.fromEntries(goodsArr)
+  const unsortedGoods = Object.fromEntries(goodsArr)
+  const goods = sortGoods(unsortedGoods)
   const system = getSystemName(inputSystem)
   const name = getStationName(inputStName)
   const id = getStationID(system, name)
@@ -56,4 +58,15 @@ export async function saveStation(station: Station): Promise<void> {
     console.log("Error while saving station.JSON data:", err)
     throw err
   }
+}
+
+export function sortGoods(goods: Goods) {
+  let sortedGoods: Goods = {}
+  for (const name of goodsOrder) {
+    if (name in goods) {
+      const price = goods[name]
+      sortedGoods[name] = price
+    }
+  }
+  return sortedGoods
 }

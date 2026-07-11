@@ -6,9 +6,12 @@ export const dictionary = [
   "Animal Meat",
   "Synthetic Meat",
   "Liquor",
+  "Narcotics",
   "Medicines",
   "Fertilizer",
   "Animal Skins",
+  "Live Animals",
+  "Slaves",
   "Luxury Goods",
   "Heavy Plastics",
   "Metal Alloys",
@@ -29,10 +32,10 @@ export const dictionary = [
   "Rubbish",
   "Alien Artefacts",
   "Chaff",
-  "Live Animals",
-  "Slaves",
-  "Narcotics",
 ]
+
+// order used for sorting and displaying goods based on goods order from FFE
+export const goodsOrder = dictionary
 
 export const blacklist = [
   "Radioactives",
