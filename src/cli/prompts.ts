@@ -29,12 +29,16 @@ async function printOptions() {
   renderHeader()
 
   await typeTextWrapper("\n1. Add stations data (OCR pipeline)", 10)
+
   await typeTextWrapper("\nFind best:", 10)
   await typeTextWrapper("  2. legal trade between stations", 10)
   await typeTextWrapper("  3. legal trade between systems", 10)
   await typeTextWrapper("  4. illegal trade between stations", 10)
   await typeTextWrapper("  5. illegal trade between systems", 10)
+
   await typeTextWrapper("\n6. Exit", 10)
+
+  await typeTextWrapper("\n(Type 'back' to return to this menu)", 5)
 
   const choice = await ask("\nChoose option: ")
 
