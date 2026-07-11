@@ -171,7 +171,7 @@ async function promptForValidStationId(
   repeatMsg: string,
 ): Promise<string> {
   let stationID = await ask(firstMsg)
-  while (!getStation(stationID)) {
+  while (stationID !== "back" && !getStation(stationID)) {
     stationID = await ask(repeatMsg)
   }
   return stationID
@@ -182,7 +182,10 @@ async function promptForValidSystemName(
   repeatMsg: string,
 ): Promise<string> {
   let systemName = await ask(firstMsg)
-  while (getStationsBySystem(systemName).length === 0) {
+  while (
+    systemName !== "back" &&
+    getStationsBySystem(systemName).length === 0
+  ) {
     systemName = await ask(repeatMsg)
   }
   return systemName
