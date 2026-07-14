@@ -8,6 +8,12 @@ A standalone CLI companion for _Frontier: First Encounters_ (1995).
 
 Take screenshots of any station's stockmarket during your playthrough. FFE Market Analyzer reads the price data from those images, builds up a local database across your visited stations, and finds the best trade routes — showing you the most profitable buy/sell opportunities between two stations or two star systems.
 
+---
+
+### 📺 See FFE Market Analyzer in Action!
+
+[![Watch the video](https://img.youtube.com/vi/1fwm3HyatxY/maxresdefault.jpg)](https://www.youtube.com/watch?v=1fwm3HyatxY)
+
 ## Demo version
 
 A prebuilt Demo version is available for quick evaluation and portfolio/recruiter review.
